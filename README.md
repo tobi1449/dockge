@@ -4,9 +4,9 @@
 
 # Dockge
 
-A fancy, easy-to-use and reactive self-hosted docker compose.yaml stack-oriented manager.
+A fancy, easy-to-use and reactive self-hosted docker compose stack-oriented manager forked from louislam/dockge that has had several Pull Requests merged.
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/louislam/dockge?logo=github&style=flat)](https://github.com/louislam/dockge) [![Docker Pulls](https://img.shields.io/docker/pulls/louislam/dockge?logo=docker)](https://hub.docker.com/r/louislam/dockge/tags) [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/louislam/dockge/latest?label=docker%20image%20ver.)](https://hub.docker.com/r/louislam/dockge/tags) [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/louislam/dockge/master?logo=github)](https://github.com/louislam/dockge/commits/master/)
+[![GitHub Repo stars](https://img.shields.io/github/stars/cmcooper1980/dockge?logo=github&style=flat)](https://github.com/cmcooper1980/dockge) [![Docker Pulls](https://img.shields.io/docker/pulls/cmcooper1980/dockge?logo=docker)](https://hub.docker.com/r/cmcooper1980/dockge/tags) [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/cmcooper1980/dockge/latest?label=docker%20image%20ver.)](https://hub.docker.com/r/cmcooper1980/dockge/tags) [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/cmcooper1980/dockge/master?logo=github)](https://github.com/cmcooper1980/dockge/commits/master/)
 
 <img src="https://github.com/louislam/dockge/assets/1336778/26a583e1-ecb1-4a8d-aedf-76157d714ad7" width="900" alt="" />
 
@@ -71,7 +71,7 @@ mkdir -p /opt/stacks /opt/dockge
 cd /opt/dockge
 
 # Download the compose.yaml
-curl https://raw.githubusercontent.com/louislam/dockge/master/compose.yaml --output compose.yaml
+curl https://raw.githubusercontent.com/cmcooper1980/dockge/master/compose.yaml --output compose.yaml
 
 # Start the server
 docker compose up -d
@@ -116,61 +116,8 @@ docker compose pull && docker compose up -d
 ![](https://github.com/louislam/dockge/assets/1336778/a4478d23-b1c4-4991-8768-1a7cad3472e3)
 
 
-## Motivations
-
-- I have been using Portainer for some time, but for the stack management, I am sometimes not satisfied with it. For example, sometimes when I try to deploy a stack, the loading icon keeps spinning for a few minutes without progress. And sometimes error messages are not clear.
-- Try to develop with ES Module + TypeScript (Originally, I planned to use Deno or Bun.js, but they don't have support for arm64, so I stepped back to Node.js)
-
-If you love this project, please consider giving it a ⭐.
 
 
-## 🗣️ Community and Contribution
-
-### Bug Report
-https://github.com/louislam/dockge/issues
-
-### Ask for Help / Discussions
-https://github.com/louislam/dockge/discussions
-
-### Translation
-If you want to translate Dockge into your language, please read [Translation Guide](https://github.com/louislam/dockge/blob/master/frontend/src/lang/README.md)
-
-### Create a Pull Request
-
-Be sure to read the [guide](https://github.com/louislam/dockge/blob/master/CONTRIBUTING.md), as we don't accept all types of pull requests and don't want to waste your time.
-
-## FAQ
-
-#### "Dockge"?
-
-"Dockge" is a coinage word which is created by myself. I originally hoped it sounds like `Dodge`, but apparently many people called it `Dockage`, it is also acceptable.
-
-The naming idea came from Twitch emotes like `sadge`, `bedge` or `wokege`. They all end in `-ge`.
-
-#### Can I manage a single container without `compose.yaml`?
-
-The main objective of Dockge is to try to use the docker `compose.yaml` for everything. If you want to manage a single container, you can just use Portainer or Docker CLI.
-
-#### Can I manage existing stacks?
-
-Yes, you can. However, you need to move your compose file into the stacks directory:
-
-1. Stop your stack
-2. Move your compose file into `/opt/stacks/<stackName>/compose.yaml`
-3. In Dockge, click the " Scan Stacks Folder" button in the top-right corner's dropdown menu
-4. Now you should see your stack in the list
-
-#### Is Dockge a Portainer replacement?
-
-Yes or no. Portainer provides a lot of Docker features. While Dockge is currently only focusing on docker-compose with a better user interface and better user experience.
-
-If you want to manage your container with docker-compose only, the answer may be yes.
-
-If you still need to manage something like docker networks, single containers, the answer may be no.
-
-#### Can I install both Dockge and Portainer?
-
-Yes, you can.
 
 ## Others
 
