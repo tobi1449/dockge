@@ -130,7 +130,7 @@ Dockge is built on top of [Compose V2](https://docs.docker.com/compose/migrate/)
 ```
 services:
   dockge:
-    image: cmcooper1980/dockge
+    image: cmcooper1980/dockge:experimental
     container_name: dockge
     restart: unless-stopped
     environment:
