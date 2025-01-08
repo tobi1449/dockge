@@ -35,12 +35,14 @@ View Video: https://youtu.be/AWAlOQeNpgU?t=48
 - PR #438: Docker Compose Pull Skip Local Images (by https://github.com/vladaurosh)
 - PR #575: Theme Options Enabled in Settings (by https://github.com/CampaniaGuy)
 - PR #576: Add an Update All Button (by https://github.com/DomiiBunn)
+- PR #593: Group stacks by its agent (by https://github.com/ESPGranEdu)
 - PR #623: Added Support for Pasting Text in the Terminal (by https://github.com/lukasondrejka)
 - PR #634: Build Frontend During Docker Build (by https://github.com/Jamie-)
 - PR #637: Implement RIGHT and LEFT KEYS terminal navigation (by https://github.com/lukasondrejka)
 - PR #642: Remove Useless Scrollbar (by https://github.com/cyril59310)
 - PR #649: Add Container Control Buttons (by https://github.com/mizady)
 - PR #685: Preserve YAML Comments (by https://github.com/turnah)
+- PR #700: Add Resource Usage Stats (by https://github.com/justwiebe)
 
 
 ## 🔧 How to Install
