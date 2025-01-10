@@ -31,6 +31,7 @@ COPY --chown=node:node --from=build_healthcheck /app/extra/healthcheck /app/extr
 COPY --from=build_frontend /app/frontend-dist /app/frontend-dist
 COPY --from=build_nodemodules /app/node_modules /app/node_modules
 COPY --chown=node:node . .
+RUN rm -rf ./data
 RUN mkdir ./data
 
 
