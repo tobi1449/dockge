@@ -23,7 +23,7 @@
                 <div class="update-all-wrapper">
                     <button class="btn btn-primary" @click="updateAll">
                         <font-awesome-icon icon="fa-cloud-arrow-down me-1" />
-                        {{ $t("updateAll") }}
+                        {{ $t("Update All") }}
                     </button>
                 </div>
             </div>
