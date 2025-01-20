@@ -11,7 +11,7 @@ export class User extends BeanModel {
      * @param {string} newPassword Users new password
      * @returns {Promise<void>}
      */
-    static async resetPassword(userID : number, newPassword : string) {
+    static async resetPassword(userID: number, newPassword: string) {
         await R.exec("UPDATE `user` SET password = ? WHERE id = ? ", [
             generatePasswordHash(newPassword),
             userID
@@ -23,7 +23,7 @@ export class User extends BeanModel {
      * @param {string} newPassword
      * @returns {Promise<void>}
      */
-    async resetPassword(newPassword : string) {
+    async resetPassword(newPassword: string) {
         await User.resetPassword(this.id, newPassword);
         this.password = newPassword;
     }
@@ -34,7 +34,7 @@ export class User extends BeanModel {
      * @param {string} jwtSecret The key used to sign the JsonWebToken
      * @returns {string} the JsonWebToken as a string
      */
-    static createJWT(user : User, jwtSecret : string) {
+    static createJWT(user: User, jwtSecret: string) {
         return jwt.sign({
             username: user.username,
             h: shake256(user.password, SHAKE256_LENGTH),

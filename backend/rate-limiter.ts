@@ -4,20 +4,20 @@ import { RateLimiter, RateLimiterOpts } from "limiter-es6-compat";
 import { log } from "./log";
 
 export interface KumaRateLimiterOpts extends RateLimiterOpts {
-    errorMessage : string;
+    errorMessage: string;
 }
 
-export type KumaRateLimiterCallback = (err : object) => void;
+export type KumaRateLimiterCallback = (err: object) => void;
 
 class KumaRateLimiter {
 
-    errorMessage : string;
-    rateLimiter : RateLimiter;
+    errorMessage: string;
+    rateLimiter: RateLimiter;
 
     /**
      * @param {object} config Rate limiter configuration object
      */
-    constructor(config : KumaRateLimiterOpts) {
+    constructor(config: KumaRateLimiterOpts) {
         this.errorMessage = config.errorMessage;
         this.rateLimiter = new RateLimiter(config);
     }
@@ -34,7 +34,7 @@ class KumaRateLimiter {
      * @param {number} num Number of tokens to remove
      * @returns {Promise<boolean>} Should the request be allowed?
      */
-    async pass(callback : KumaRateLimiterCallback, num = 1) {
+    async pass(callback: KumaRateLimiterCallback, num = 1) {
         const remainingRequests = await this.removeTokens(num);
         log.info("rate-limit", "remaining requests: " + remainingRequests);
         if (remainingRequests < 0) {

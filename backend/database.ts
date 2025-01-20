@@ -25,7 +25,7 @@ export class Database {
      * SQLite file path (Default: ./data/dockge.db)
      * @type {string}
      */
-    static sqlitePath : string;
+    static sqlitePath: string;
 
     static noReject = true;
 
@@ -33,14 +33,14 @@ export class Database {
 
     static knexMigrationsPath = "./backend/migrations";
 
-    private static server : DockgeServer;
+    private static server: DockgeServer;
 
     /**
      * Use for decode the auth object
      */
-    jwtSecret? : string;
+    jwtSecret?: string;
 
-    static async init(server : DockgeServer) {
+    static async init(server: DockgeServer) {
         this.server = server;
 
         log.debug("server", "Connecting to the database");
@@ -57,7 +57,7 @@ export class Database {
      * @typedef {string|undefined} envString
      * @returns {{type: "sqlite"} | {type:envString, hostname:envString, port:envString, database:envString, username:envString, password:envString}} Database config
      */
-    static readDBConfig() : DBConfig {
+    static readDBConfig(): DBConfig {
         const dbConfigString = fs.readFileSync(path.join(this.server.config.dataDir, "db-config.json")).toString("utf-8");
         const dbConfig = JSON.parse(dbConfigString);
 
@@ -76,7 +76,7 @@ export class Database {
      * @param dbConfig the database configuration that should be written
      * @returns {void}
      */
-    static writeDBConfig(dbConfig : DBConfig) {
+    static writeDBConfig(dbConfig: DBConfig) {
         fs.writeFileSync(path.join(this.server.config.dataDir, "db-config.json"), JSON.stringify(dbConfig, null, 4));
     }
 
@@ -88,7 +88,7 @@ export class Database {
      */
     static async connect(autoloadModels = true) {
         const acquireConnectionTimeout = 120 * 1000;
-        let dbConfig : DBConfig;
+        let dbConfig: DBConfig;
         try {
             dbConfig = this.readDBConfig();
             Database.dbConfig = dbConfig;

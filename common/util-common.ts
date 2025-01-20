@@ -30,7 +30,7 @@ export interface BaseRes {
     msg?: string;
 }
 
-let randomBytes : (numBytes: number) => Uint8Array;
+let randomBytes: (numBytes: number) => Uint8Array;
 initRandomBytes();
 
 async function initRandomBytes() {
@@ -56,7 +56,7 @@ export const CREATED_STACK = 2;
 export const RUNNING = 3;
 export const EXITED = 4;
 
-export function statusName(status : number) : string {
+export function statusName(status: number): string {
     switch (status) {
         case CREATED_FILE:
             return "draft";
@@ -71,7 +71,7 @@ export function statusName(status : number) : string {
     }
 }
 
-export function statusNameShort(status : number) : string {
+export function statusNameShort(status: number): string {
     switch (status) {
         case CREATED_FILE:
             return "inactive";
@@ -86,7 +86,7 @@ export function statusNameShort(status : number) : string {
     }
 }
 
-export function statusColor(status : number) : string {
+export function statusColor(status: number): string {
     switch (status) {
         case CREATED_FILE:
             return "dark";
@@ -111,7 +111,7 @@ export const COMBINED_TERMINAL_ROWS = 20;
 
 export const ERROR_TYPE_VALIDATION = 1;
 
-export const allowedCommandList : string[] = [
+export const allowedCommandList: string[] = [
     "docker",
     "ls",
     "cd",
@@ -141,7 +141,7 @@ export const acceptedComposeFileNamePattern = new RegExp(
  * @param str Input
  * @param length Default is 10 which means 0 - 9
  */
-export function intHash(str : string, length = 10) : number {
+export function intHash(str: string, length = 10): number {
     // A simple hashing function (you can use more complex hash functions if needed)
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -219,23 +219,23 @@ export function getCryptoRandomInt(min: number, max: number):number {
     }
 }
 
-export function getComposeTerminalName(endpoint : string, stack : string) {
+export function getComposeTerminalName(endpoint: string, stack: string) {
     return "compose-" + endpoint + "-" + stack;
 }
 
-export function getCombinedTerminalName(endpoint : string, stack : string) {
+export function getCombinedTerminalName(endpoint: string, stack: string) {
     return "combined-" + endpoint + "-" + stack;
 }
 
-export function getContainerTerminalName(endpoint : string, container : string) {
+export function getContainerTerminalName(endpoint: string, container: string) {
     return "container-" + endpoint + "-" + container;
 }
 
-export function getContainerExecTerminalName(endpoint : string, stackName : string, container : string, index : number) {
+export function getContainerExecTerminalName(endpoint: string, stackName: string, container: string, index: number) {
     return "container-exec-" + endpoint + "-" + stackName + "-" + container + "-" + index;
 }
 
-export function copyYAMLComments(doc : Document, src : Document) {
+export function copyYAMLComments(doc: Document, src: Document) {
     doc.comment = src.comment;
     doc.commentBefore = src.commentBefore;
 
@@ -325,7 +325,7 @@ function copyYAMLCommentsItems(items: any, srcItems: any) {
  * @param input
  * @param hostname
  */
-export function parseDockerPort(input : string, hostname : string) {
+export function parseDockerPort(input: string, hostname: string) {
     let port;
     let display;
 
@@ -390,7 +390,7 @@ export function parseDockerPort(input : string, hostname : string) {
     };
 }
 
-export function envsubst(string : string, variables : LooseObject) : string {
+export function envsubst(string: string, variables: LooseObject): string {
     return replaceVariablesSync(string, variables)[0];
 }
 
@@ -401,7 +401,7 @@ export function envsubst(string : string, variables : LooseObject) : string {
  * @param env Environment variables
  * @returns string Yaml string with environment variables replaced
  */
-export function envsubstYAML(content : string, env : DotenvParseOutput) : string {
+export function envsubstYAML(content: string, env: DotenvParseOutput): string {
     const doc = yaml.parseDocument(content);
     if (doc.contents) {
         // @ts-ignore
@@ -417,7 +417,7 @@ export function envsubstYAML(content : string, env : DotenvParseOutput) : string
  * @param pair
  * @param env
  */
-function traverseYAML(pair : Pair, env : DotenvParseOutput) : void {
+function traverseYAML(pair: Pair, env: DotenvParseOutput): void {
     // @ts-ignore
     if (pair.value && pair.value.items) {
         // @ts-ignore

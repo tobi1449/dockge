@@ -20,7 +20,7 @@ import jwt from "jsonwebtoken";
 import { Settings } from "../settings";
 
 export class MainSocketHandler extends SocketHandler {
-    create(socket : DockgeSocket, server : DockgeServer) {
+    create(socket: DockgeSocket, server: DockgeServer) {
 
         // ***************************
         // Public Socket API
@@ -303,7 +303,7 @@ export class MainSocketHandler extends SocketHandler {
         });
 
         // composerize
-        socket.on("composerize", async (dockerRunCommand : unknown, callback) => {
+        socket.on("composerize", async (dockerRunCommand: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -322,7 +322,7 @@ export class MainSocketHandler extends SocketHandler {
         });
     }
 
-    async login(username : string, password : string) : Promise<User | null> {
+    async login(username: string, password: string): Promise<User | null> {
         if (typeof username !== "string" || typeof password !== "string") {
             return null;
         }

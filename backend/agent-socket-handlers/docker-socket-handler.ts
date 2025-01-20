@@ -5,10 +5,10 @@ import { Stack } from "../stack";
 import { AgentSocket } from "../../common/agent-socket";
 
 export class DockerSocketHandler extends AgentSocketHandler {
-    create(socket : DockgeSocket, server : DockgeServer, agentSocket : AgentSocket) {
+    create(socket: DockgeSocket, server: DockgeServer, agentSocket: AgentSocket) {
         // Do not call super.create()
 
-        agentSocket.on("deployStack", async (name : unknown, composeYAML : unknown, composeENV : unknown, isAdd : unknown, callback) => {
+        agentSocket.on("deployStack", async (name: unknown, composeYAML: unknown, composeENV: unknown, isAdd: unknown, callback) => {
             try {
                 checkLogin(socket);
                 const stack = await this.saveStack(server, name, composeYAML, composeENV, isAdd);
@@ -25,7 +25,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
             }
         });
 
-        agentSocket.on("saveStack", async (name : unknown, composeYAML : unknown, composeENV : unknown, isAdd : unknown, callback) => {
+        agentSocket.on("saveStack", async (name: unknown, composeYAML: unknown, composeENV: unknown, isAdd: unknown, callback) => {
             try {
                 checkLogin(socket);
                 await this.saveStack(server, name, composeYAML, composeENV, isAdd);
@@ -40,7 +40,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
             }
         });
 
-        agentSocket.on("deleteStack", async (name : unknown, callback) => {
+        agentSocket.on("deleteStack", async (name: unknown, callback) => {
             try {
                 checkLogin(socket);
                 if (typeof(name) !== "string") {
@@ -67,7 +67,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
             }
         });
 
-        agentSocket.on("getStack", async (stackName : unknown, callback) => {
+        agentSocket.on("getStack", async (stackName: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -106,7 +106,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
         });
 
         // startStack
-        agentSocket.on("startStack", async (stackName : unknown, callback) => {
+        agentSocket.on("startStack", async (stackName: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -131,7 +131,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
         });
 
         // stopStack
-        agentSocket.on("stopStack", async (stackName : unknown, callback) => {
+        agentSocket.on("stopStack", async (stackName: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -155,7 +155,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
         });
 
         // restartStack
-        agentSocket.on("restartStack", async (stackName : unknown, callback) => {
+        agentSocket.on("restartStack", async (stackName: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -177,7 +177,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
         });
 
         // updateStack
-        agentSocket.on("updateStack", async (stackName : unknown, callback) => {
+        agentSocket.on("updateStack", async (stackName: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -198,7 +198,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
         });
 
         // down stack
-        agentSocket.on("downStack", async (stackName : unknown, callback) => {
+        agentSocket.on("downStack", async (stackName: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -220,7 +220,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
         });
 
         // Services status
-        agentSocket.on("serviceStatusList", async (stackName : unknown, callback) => {
+        agentSocket.on("serviceStatusList", async (stackName: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -269,7 +269,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
         });
     }
 
-    async saveStack(server : DockgeServer, name : unknown, composeYAML : unknown, composeENV : unknown, isAdd : unknown) : Promise<Stack> {
+    async saveStack(server: DockgeServer, name: unknown, composeYAML: unknown, composeENV: unknown, isAdd: unknown): Promise<Stack> {
         // Check types
         if (typeof(name) !== "string") {
             throw new ValidationError("Name must be a string");

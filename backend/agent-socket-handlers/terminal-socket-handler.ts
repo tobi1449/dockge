@@ -7,9 +7,9 @@ import { AgentSocketHandler } from "../agent-socket-handler";
 import { AgentSocket } from "../../common/agent-socket";
 
 export class TerminalSocketHandler extends AgentSocketHandler {
-    create(socket : DockgeSocket, server : DockgeServer, agentSocket : AgentSocket) {
+    create(socket: DockgeSocket, server: DockgeServer, agentSocket: AgentSocket) {
 
-        agentSocket.on("terminalInput", async (terminalName : unknown, cmd : unknown, callback) => {
+        agentSocket.on("terminalInput", async (terminalName: unknown, cmd: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -34,7 +34,7 @@ export class TerminalSocketHandler extends AgentSocketHandler {
         });
 
         // Main Terminal
-        agentSocket.on("mainTerminal", async (terminalName : unknown, callback) => {
+        agentSocket.on("mainTerminal", async (terminalName: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -67,7 +67,7 @@ export class TerminalSocketHandler extends AgentSocketHandler {
         });
 
         // Interactive Terminal for containers
-        agentSocket.on("interactiveTerminal", async (stackName : unknown, serviceName : unknown, shell : unknown, callback) => {
+        agentSocket.on("interactiveTerminal", async (stackName: unknown, serviceName: unknown, shell: unknown, callback) => {
             try {
                 checkLogin(socket);
 
@@ -99,7 +99,7 @@ export class TerminalSocketHandler extends AgentSocketHandler {
         });
 
         // Join Output Terminal
-        agentSocket.on("terminalJoin", async (terminalName : unknown, callback) => {
+        agentSocket.on("terminalJoin", async (terminalName: unknown, callback) => {
             if (typeof(callback) !== "function") {
                 log.debug("console", "Callback is not a function.");
                 return;
@@ -111,7 +111,7 @@ export class TerminalSocketHandler extends AgentSocketHandler {
                     throw new ValidationError("Terminal name must be a string.");
                 }
 
-                let buffer : string = Terminal.getTerminal(terminalName)?.getBuffer() ?? "";
+                let buffer: string = Terminal.getTerminal(terminalName)?.getBuffer() ?? "";
 
                 if (!buffer) {
                     log.debug("console", "No buffer found.");
@@ -127,7 +127,7 @@ export class TerminalSocketHandler extends AgentSocketHandler {
         });
 
         // Leave Combined Terminal
-        agentSocket.on("leaveCombinedTerminal", async (stackName : unknown, callback) => {
+        agentSocket.on("leaveCombinedTerminal", async (stackName: unknown, callback) => {
             try {
                 checkLogin(socket);
 

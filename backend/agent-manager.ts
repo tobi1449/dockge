@@ -13,20 +13,20 @@ import dayjs, { Dayjs } from "dayjs";
  */
 export class AgentManager {
 
-    protected socket : DockgeSocket;
-    protected agentSocketList : Record<string, SocketClient> = {};
-    protected agentLoggedInList : Record<string, boolean> = {};
-    protected _firstConnectTime : Dayjs = dayjs();
+    protected socket: DockgeSocket;
+    protected agentSocketList: Record<string, SocketClient> = {};
+    protected agentLoggedInList: Record<string, boolean> = {};
+    protected _firstConnectTime: Dayjs = dayjs();
 
     constructor(socket: DockgeSocket) {
         this.socket = socket;
     }
 
-    get firstConnectTime() : Dayjs {
+    get firstConnectTime(): Dayjs {
         return this._firstConnectTime;
     }
 
-    test(url : string, username : string, password : string) : Promise<void> {
+    test(url: string, username: string, password: string): Promise<void> {
         return new Promise((resolve, reject) => {
             let obj = new URL(url);
             let endpoint = obj.host;
@@ -50,7 +50,7 @@ export class AgentManager {
                 client.emit("login", {
                     username: username,
                     password: password,
-                }, (res : LooseObject) => {
+                }, (res: LooseObject) => {
                     if (res.ok) {
                         resolve();
                     } else {
@@ -92,7 +92,7 @@ export class AgentManager {
      *
      * @param url
      */
-    async remove(url : string) {
+    async remove(url: string) {
         let bean = await R.findOne("agent", " url = ? ", [
             url,
         ]);
@@ -125,7 +125,7 @@ export class AgentManager {
         }
     }
 
-    connect(url : string, username : string, password : string) {
+    connect(url: string, username: string, password: string) {
         let obj = new URL(url);
         let endpoint = obj.host;
 
@@ -157,7 +157,7 @@ export class AgentManager {
             client.emit("login", {
                 username: username,
                 password: password,
-            }, (res : LooseObject) => {
+            }, (res: LooseObject) => {
                 if (res.ok) {
                     log.info("agent-manager", "Logged in to the socket server: " + endpoint);
                     this.agentLoggedInList[endpoint] = true;
@@ -192,7 +192,7 @@ export class AgentManager {
             });
         });
 
-        client.on("agent", (...args : unknown[]) => {
+        client.on("agent", (...args: unknown[]) => {
             this.socket.emit("agent", ...args);
         });
 
@@ -213,7 +213,7 @@ export class AgentManager {
         this.agentSocketList[endpoint] = client;
     }
 
-    disconnect(endpoint : string) {
+    disconnect(endpoint: string) {
         let client = this.agentSocketList[endpoint];
         client?.disconnect();
     }
@@ -226,7 +226,7 @@ export class AgentManager {
             return;
         }
 
-        let list : Record<string, Agent> = await Agent.getAgentList();
+        let list: Record<string, Agent> = await Agent.getAgentList();
 
         if (Object.keys(list).length !== 0) {
             log.info("agent-manager", "Connecting to all instance socket server(s)...");
@@ -244,7 +244,7 @@ export class AgentManager {
         }
     }
 
-    async emitToEndpoint(endpoint: string, eventName: string, ...args : unknown[]) {
+    async emitToEndpoint(endpoint: string, eventName: string, ...args: unknown[]) {
         log.debug("agent-manager", "Emitting event to endpoint: " + endpoint);
         let client = this.agentSocketList[endpoint];
 
@@ -279,7 +279,7 @@ export class AgentManager {
         client.emit("agent", endpoint, eventName, ...args);
     }
 
-    emitToAllEndpoints(eventName: string, ...args : unknown[]) {
+    emitToAllEndpoints(eventName: string, ...args: unknown[]) {
         log.debug("agent-manager", "Emitting event to all endpoints");
         for (let endpoint in this.agentSocketList) {
             this.emitToEndpoint(endpoint, eventName, ...args).catch((e) => {
@@ -290,7 +290,7 @@ export class AgentManager {
 
     async sendAgentList() {
         let list = await Agent.getAgentList();
-        let result : Record<string, LooseObject> = {};
+        let result: Record<string, LooseObject> = {};
 
         // Myself
         result[""] = {

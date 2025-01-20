@@ -3,7 +3,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
     data() {
         return {
-            system: (window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light",
+            system: (window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark": "light",
             userTheme: localStorage.theme,
             statusPageTheme: "light",
             forceStatusPageTheme: false,

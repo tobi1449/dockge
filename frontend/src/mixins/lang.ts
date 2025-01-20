@@ -28,7 +28,7 @@ export default defineComponent({
          * @param {string} lang Language code to switch to
          * @returns {Promise<void>}
          */
-        async changeLang(lang : string) {
+        async changeLang(lang: string) {
             const message = (await langModules["../lang/" + lang + ".json"]()).default;
             this.$i18n.setLocaleMessage(lang, message);
             this.$i18n.locale = lang;

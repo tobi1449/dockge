@@ -74,7 +74,7 @@
                 </template>
                 <div class="d-flex flex-grow-1 justify-content-end">
                     <button class="btn btn-sm btn-normal" @click="expandedStats = !expandedStats">
-                        <font-awesome-icon :icon="expandedStats ? 'chevron-up' : 'chevron-down'" />
+                        <font-awesome-icon :icon="expandedStats ? 'chevron-up': 'chevron-down'" />
                     </button>
                 </div>
             </div>

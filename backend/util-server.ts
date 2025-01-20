@@ -9,48 +9,48 @@ import fs from "fs";
 import { AgentManager } from "./agent-manager";
 
 export interface JWTDecoded {
-    username : string;
-    h? : string;
+    username: string;
+    h?: string;
 }
 
 export interface DockgeSocket extends Socket {
     userID: number;
-    consoleTerminal? : Terminal;
-    instanceManager : AgentManager;
-    endpoint : string;
-    emitAgent : (eventName : string, ...args : unknown[]) => void;
+    consoleTerminal?: Terminal;
+    instanceManager: AgentManager;
+    endpoint: string;
+    emitAgent: (eventName: string, ...args: unknown[]) => void;
 }
 
 // For command line arguments, so they are nullable
 export interface Arguments {
-    sslKey? : string;
-    sslCert? : string;
-    sslKeyPassphrase? : string;
-    port? : number;
-    hostname? : string;
-    dataDir? : string;
-    stacksDir? : string;
+    sslKey?: string;
+    sslCert?: string;
+    sslKeyPassphrase?: string;
+    port?: number;
+    hostname?: string;
+    dataDir?: string;
+    stacksDir?: string;
 }
 
 // Some config values are required
 export interface Config extends Arguments {
-    dataDir : string;
-    stacksDir : string;
+    dataDir: string;
+    stacksDir: string;
 }
 
-export function checkLogin(socket : DockgeSocket) {
+export function checkLogin(socket: DockgeSocket) {
     if (!socket.userID) {
         throw new Error("You are not logged in.");
     }
 }
 
 export class ValidationError extends Error {
-    constructor(message : string) {
+    constructor(message: string) {
         super(message);
     }
 }
 
-export function callbackError(error : unknown, callback : unknown) {
+export function callbackError(error: unknown, callback: unknown) {
     if (typeof(callback) !== "function") {
         log.error("console", "Callback is not a function");
         return;
@@ -74,7 +74,7 @@ export function callbackError(error : unknown, callback : unknown) {
     }
 }
 
-export function callbackResult(result : unknown, callback : unknown) {
+export function callbackResult(result: unknown, callback: unknown) {
     if (typeof(callback) !== "function") {
         log.error("console", "Callback is not a function");
         return;
@@ -82,7 +82,7 @@ export function callbackResult(result : unknown, callback : unknown) {
     callback(result);
 }
 
-export async function doubleCheckPassword(socket : DockgeSocket, currentPassword : unknown) {
+export async function doubleCheckPassword(socket: DockgeSocket, currentPassword: unknown) {
     if (typeof currentPassword !== "string") {
         throw new Error("Wrong data type?");
     }
@@ -98,7 +98,7 @@ export async function doubleCheckPassword(socket : DockgeSocket, currentPassword
     return user;
 }
 
-export function fileExists(file : string) {
+export function fileExists(file: string) {
     return fs.promises.access(file, fs.constants.F_OK)
         .then(() => true)
         .catch(() => false);

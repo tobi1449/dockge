@@ -95,6 +95,6 @@ module.exports = {
         "@typescript-eslint/no-unused-vars": [ "warn", {
             "args": "none"
         }],
-        "prefer-const" : "off",
+        "prefer-const": "off",
     },
 };

@@ -50,7 +50,7 @@ const consoleModuleColors = [
     CONSOLE_STYLE_FgPink,
 ];
 
-const consoleLevelColors : Record<string, string> = {
+const consoleLevelColors: Record<string, string> = {
     "INFO": CONSOLE_STYLE_FgCyan,
     "WARN": CONSOLE_STYLE_FgYellow,
     "ERROR": CONSOLE_STYLE_FgRed,
@@ -68,7 +68,7 @@ class Logger {
      *     "info_monitor",
      *  ]
      */
-    hideLog : Record<string, string[]> = {
+    hideLog: Record<string, string[]> = {
         info: [],
         warn: [],
         error: [],
@@ -133,7 +133,7 @@ class Logger {
         } else if (level === "WARN") {
             console.warn(timePart, modulePart, levelPart, msg);
         } else if (level === "ERROR") {
-            let msgPart : unknown;
+            let msgPart: unknown;
             if (typeof msg === "string") {
                 msgPart = CONSOLE_STYLE_FgRed + msg + CONSOLE_STYLE_Reset;
             } else {
@@ -143,7 +143,7 @@ class Logger {
         } else if (level === "DEBUG") {
             if (isDev) {
                 timePart = CONSOLE_STYLE_FgGray + now + CONSOLE_STYLE_Reset;
-                let msgPart : unknown;
+                let msgPart: unknown;
                 if (typeof msg === "string") {
                     msgPart = CONSOLE_STYLE_FgGray + msg + CONSOLE_STYLE_Reset;
                 } else {

@@ -6,7 +6,7 @@ services:
       dockerfile: docker/Dockerfile
     restart: unless-stopped
     ports:
-      # Host Port : Container Port
+      # Host Port: Container Port
       - 5001:5001
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

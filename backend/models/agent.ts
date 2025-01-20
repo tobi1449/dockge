@@ -4,21 +4,21 @@ import { LooseObject } from "../../common/util-common";
 
 export class Agent extends BeanModel {
 
-    static async getAgentList() : Promise<Record<string, Agent>> {
+    static async getAgentList(): Promise<Record<string, Agent>> {
         let list = await R.findAll("agent") as Agent[];
-        let result : Record<string, Agent> = {};
+        let result: Record<string, Agent> = {};
         for (let agent of list) {
             result[agent.endpoint] = agent;
         }
         return result;
     }
 
-    get endpoint() : string {
+    get endpoint(): string {
         let obj = new URL(this.url);
         return obj.host;
     }
 
-    toJSON() : LooseObject {
+    toJSON(): LooseObject {
         return {
             url: this.url,
             username: this.username,

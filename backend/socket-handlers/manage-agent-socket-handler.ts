@@ -6,9 +6,9 @@ import { LooseObject } from "../../common/util-common";
 
 export class ManageAgentSocketHandler extends SocketHandler {
 
-    create(socket : DockgeSocket, server : DockgeServer) {
+    create(socket: DockgeSocket, server: DockgeServer) {
         // addAgent
-        socket.on("addAgent", async (requestData : unknown, callback : unknown) => {
+        socket.on("addAgent", async (requestData: unknown, callback: unknown) => {
             try {
                 log.debug("manage-agent-socket-handler", "addAgent");
                 checkLogin(socket);
@@ -42,7 +42,7 @@ export class ManageAgentSocketHandler extends SocketHandler {
         });
 
         // removeAgent
-        socket.on("removeAgent", async (url : unknown, callback : unknown) => {
+        socket.on("removeAgent", async (url: unknown, callback: unknown) => {
             try {
                 log.debug("manage-agent-socket-handler", "removeAgent");
                 checkLogin(socket);
@@ -68,7 +68,7 @@ export class ManageAgentSocketHandler extends SocketHandler {
         });
 
         // updateAgent
-        socket.on("updateAgent", async (name : string, updatedName : string, callback : unknown) => {
+        socket.on("updateAgent", async (name: string, updatedName: string, callback: unknown) => {
             try {
                 log.debug("manage-agent-socket-handler", "updateAgent");
                 checkLogin(socket);

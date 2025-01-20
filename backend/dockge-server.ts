@@ -39,24 +39,24 @@ import { ManageAgentSocketHandler } from "./socket-handlers/manage-agent-socket-
 import { Terminal } from "./terminal";
 
 export class DockgeServer {
-    app : Express;
-    httpServer : http.Server;
-    packageJSON : PackageJson;
-    io : socketIO.Server;
-    config : Config;
-    indexHTML : string = "";
+    app: Express;
+    httpServer: http.Server;
+    packageJSON: PackageJson;
+    io: socketIO.Server;
+    config: Config;
+    indexHTML: string = "";
 
     /**
      * List of express routers
      */
-    routerList : Router[] = [
+    routerList: Router[] = [
         new MainRouter(),
     ];
 
     /**
      * List of socket handlers (no agent support)
      */
-    socketHandlerList : SocketHandler[] = [
+    socketHandlerList: SocketHandler[] = [
         new MainSocketHandler(),
         new ManageAgentSocketHandler(),
     ];
@@ -66,7 +66,7 @@ export class DockgeServer {
     /**
      * List of socket handlers (support agent)
      */
-    agentSocketHandlerList : AgentSocketHandler[] = [
+    agentSocketHandlerList: AgentSocketHandler[] = [
         new DockerSocketHandler(),
         new TerminalSocketHandler(),
     ];
@@ -76,16 +76,16 @@ export class DockgeServer {
      */
     needSetup = false;
 
-    jwtSecret : string = "";
+    jwtSecret: string = "";
 
-    stacksDir : string = "";
+    stacksDir: string = "";
 
     /**
      *
      */
     constructor() {
         // Catch unexpected errors here
-        let unexpectedErrorHandler = (error : unknown) => {
+        let unexpectedErrorHandler = (error: unknown) => {
             console.trace(error);
             console.error("If you keep encountering errors, please report to https://github.com/louislam/dockge");
         };
@@ -245,7 +245,7 @@ export class DockgeServer {
         this.io.on("connection", async (socket: Socket) => {
             let dockgeSocket = socket as DockgeSocket;
             dockgeSocket.instanceManager = new AgentManager(dockgeSocket);
-            dockgeSocket.emitAgent = (event : string, ...args : unknown[]) => {
+            dockgeSocket.emitAgent = (event: string, ...args: unknown[]) => {
                 let obj = args[0];
                 if (typeof(obj) === "object") {
                     let obj2 = obj as LooseObject;
@@ -321,7 +321,7 @@ export class DockgeServer {
         }
     }
 
-    async afterLogin(socket : DockgeSocket, user : User) {
+    async afterLogin(socket: DockgeSocket, user: User) {
         socket.userID = user.id;
         socket.join(user.id.toString());
 
@@ -417,7 +417,7 @@ export class DockgeServer {
      * @param hideVersion Should we hide the version information in the response?
      * @returns
      */
-    async sendInfo(socket : Socket, hideVersion = false) {
+    async sendInfo(socket: Socket, hideVersion = false) {
         let versionProperty;
         let latestVersionProperty;
         let isContainer;
@@ -443,7 +443,7 @@ export class DockgeServer {
      * @param {Socket} socket Socket to query
      * @returns IP of client
      */
-    async getClientIP(socket : Socket) : Promise<string> {
+    async getClientIP(socket: Socket): Promise<string> {
         let clientIP = socket.client.conn.remoteAddress;
 
         if (clientIP === undefined) {
@@ -527,7 +527,7 @@ export class DockgeServer {
      * @returns {void}
      * @throws The timezone is invalid
      */
-    checkTimezone(timezone : string) {
+    checkTimezone(timezone: string) {
         try {
             dayjs.utc("2013-11-18 11:55").tz(timezone).format();
         } catch (e) {
@@ -560,7 +560,7 @@ export class DockgeServer {
      * Init or reset JWT secret
      * @returns  JWT secret
      */
-    async initJWTSecret() : Promise<Bean> {
+    async initJWTSecret(): Promise<Bean> {
         let jwtSecretBean = await R.findOne("setting", " `key` = ? ", [
             "jwtSecret",
         ]);
@@ -595,7 +595,7 @@ export class DockgeServer {
                     stackList = await Stack.getStackList(this, useCache);
                 }
 
-                let map : Map<string, object> = new Map();
+                let map: Map<string, object> = new Map();
 
                 for (let [ stackName, stack ] of stackList) {
                     map.set(stackName, stack.toSimpleJSON(dockgeSocket.endpoint));
@@ -610,7 +610,7 @@ export class DockgeServer {
         }
     }
 
-    async getDockerNetworkList() : Promise<string[]> {
+    async getDockerNetworkList(): Promise<string[]> {
         let res = await childProcessAsync.spawn("docker", [ "network", "ls", "--format", "{{.Name}}" ], {
             encoding: "utf-8",
         });
@@ -631,7 +631,7 @@ export class DockgeServer {
         return list;
     }
 
-    async getDockerStats() : Promise<Map<string, object>> {
+    async getDockerStats(): Promise<Map<string, object>> {
         let stats = new Map<string, object>();
 
         try {
@@ -669,7 +669,7 @@ export class DockgeServer {
      * Stops all monitors and closes the database connection.
      * @param signal The signal that triggered this function to be called.
      */
-    async shutdownFunction(signal : string | undefined) {
+    async shutdownFunction(signal: string | undefined) {
         log.info("server", "Shutdown requested");
         log.info("server", "Called signal: " + signal);
 
@@ -692,7 +692,7 @@ export class DockgeServer {
      * @param {string} userID
      * @param {string?} currentSocketID
      */
-    disconnectAllSocketClients(userID: number | undefined, currentSocketID? : string) {
+    disconnectAllSocketClients(userID: number | undefined, currentSocketID?: string) {
         for (const rawSocket of this.io.sockets.sockets.values()) {
             let socket = rawSocket as DockgeSocket;
             if ((!userID || socket.userID === userID) && socket.id !== currentSocketID) {
@@ -711,7 +711,7 @@ export class DockgeServer {
     }
 
     getLocalWebSocketURL() {
-        const protocol = this.isSSL() ? "wss" : "ws";
+        const protocol = this.isSSL() ? "wss": "ws";
         const host = this.config.hostname || "localhost";
         return `${protocol}://${host}:${this.config.port}`;
     }

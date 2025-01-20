@@ -7,9 +7,9 @@ import { ALL_ENDPOINTS } from "../../common/util-common";
 
 export class AgentProxySocketHandler extends SocketHandler {
 
-    create2(socket : DockgeSocket, server : DockgeServer, agentSocket : AgentSocket) {
+    create2(socket: DockgeSocket, server: DockgeServer, agentSocket: AgentSocket) {
         // Agent - proxying requests if needed
-        socket.on("agent", async (endpoint : unknown, eventName : unknown, ...args : unknown[]) => {
+        socket.on("agent", async (endpoint: unknown, eventName: unknown, ...args: unknown[]) => {
             try {
                 checkLogin(socket);
 
@@ -41,7 +41,7 @@ export class AgentProxySocketHandler extends SocketHandler {
         });
     }
 
-    create(socket : DockgeSocket, server : DockgeServer) {
+    create(socket: DockgeSocket, server: DockgeServer) {
         throw new Error("Method not implemented. Please use create2 instead.");
     }
 }

@@ -52,7 +52,7 @@ export const currentLocale = () => localStorage.locale
     || "en";
 
 export const localeDirection = () => {
-    return rtlLangs.includes(currentLocale()) ? "rtl" : "ltr";
+    return rtlLangs.includes(currentLocale()) ? "rtl": "ltr";
 };
 
 export const i18n = createI18n({

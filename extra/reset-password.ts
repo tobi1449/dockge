@@ -76,7 +76,7 @@ export const main = async () => {
  * @param question Question to ask
  * @returns Users response
  */
-function question(question : string) : Promise<string> {
+function question(question: string): Promise<string> {
     return new Promise((resolve) => {
         rl.question(question, (answer) => {
             resolve(answer);
@@ -84,7 +84,7 @@ function question(question : string) : Promise<string> {
     });
 }
 
-function disconnectAllSocketClients(username : string, password : string) : Promise<void> {
+function disconnectAllSocketClients(username: string, password: string): Promise<void> {
     return new Promise((resolve) => {
         const url = server.getLocalWebSocketURL();
 
@@ -99,7 +99,7 @@ function disconnectAllSocketClients(username : string, password : string) : Prom
             socket.emit("login", {
                 username,
                 password,
-            }, (res : BaseRes) => {
+            }, (res: BaseRes) => {
                 if (res.ok) {
                     console.log("Logged in.");
                     socket.emit("disconnectOtherSocketClients");

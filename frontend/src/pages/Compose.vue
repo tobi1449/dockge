@@ -99,7 +99,7 @@
                                 <label for="name" class="form-label">{{ $t("dockgeAgent") }}</label>
                                 <select v-model="stack.endpoint" class="form-select">
                                     <option v-for="(agent, endpoint) in $root.agentList" :key="endpoint" :value="endpoint" :disabled="$root.agentStatusList[endpoint] != 'online'">
-                                        ({{ $root.agentStatusList[endpoint] }}) {{ (agent.name !== '') ? agent.name : agent.url || $t("Controller") }}
+                                        ({{ $root.agentStatusList[endpoint] }}) {{ (agent.name !== '') ? agent.name: agent.url || $t("Controller") }}
                                     </option>
                                 </select>
                             </div>
@@ -167,7 +167,7 @@
                     <h4 class="mb-3">{{ stack.composeFileName }}</h4>
 
                     <!-- YAML editor -->
-                    <div class="shadow-box mb-3 editor-box" :class="{'edit-mode' : isEditMode}">
+                    <div class="shadow-box mb-3 editor-box" :class="{'edit-mode': isEditMode}">
                         <prism-editor
                             ref="editor"
                             v-model="stack.composeYAML"
@@ -186,7 +186,7 @@
                     <!-- ENV editor -->
                     <div v-if="isEditMode">
                         <h4 class="mb-3">.env</h4>
-                        <div class="shadow-box mb-3 editor-box" :class="{'edit-mode' : isEditMode}">
+                        <div class="shadow-box mb-3 editor-box" :class="{'edit-mode': isEditMode}">
                             <prism-editor
                                 ref="editor"
                                 v-model="stack.composeENV"
