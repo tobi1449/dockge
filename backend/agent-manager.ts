@@ -96,7 +96,7 @@ export class AgentManager {
      * @param url
      */
     async remove(url: string) {
-        let bean = await R.findOne("agent", " url = ? ", [url]);
+        let bean = await R.findOne("agent", " url = ? ", [ url ]);
 
         if (bean) {
             await R.trash(bean);

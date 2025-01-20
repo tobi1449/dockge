@@ -108,7 +108,7 @@ export class Stack {
     async ps(): Promise<object> {
         let res = await childProcessAsync.spawn(
             "docker",
-            ["compose", "ps", "--format", "json"],
+            [ "compose", "ps", "--format", "json" ],
             {
                 cwd: this.path,
                 encoding: "utf-8",
@@ -287,7 +287,7 @@ export class Stack {
             socket,
             terminalName,
             "docker",
-            ["compose", "up", "-d", "--remove-orphans"],
+            [ "compose", "up", "-d", "--remove-orphans" ],
             this.path
         );
         if (exitCode !== 0) {
@@ -305,7 +305,7 @@ export class Stack {
             socket,
             terminalName,
             "docker",
-            ["compose", "down", "--remove-orphans"],
+            [ "compose", "down", "--remove-orphans" ],
             this.path
         );
         if (exitCode !== 0) {
@@ -395,7 +395,7 @@ export class Stack {
                                 depth + 1,
                                 path.join(dir, filename)
                             );
-                            for (let [subFilename, subStack] of subStackList) {
+                            for (let [ subFilename, subStack ] of subStackList) {
                                 stackList.set(subFilename, subStack);
                             }
                             continue;
@@ -424,7 +424,7 @@ export class Stack {
         // Get status from docker compose ls
         let res = await childProcessAsync.spawn(
             "docker",
-            ["compose", "ls", "--all", "--format", "json"],
+            [ "compose", "ls", "--all", "--format", "json" ],
             {
                 encoding: "utf-8",
             }
@@ -479,7 +479,7 @@ export class Stack {
 
         let res = await childProcessAsync.spawn(
             "docker",
-            ["compose", "ls", "--all", "--format", "json"],
+            [ "compose", "ls", "--all", "--format", "json" ],
             {
                 encoding: "utf-8",
             }
@@ -567,7 +567,7 @@ export class Stack {
             socket,
             terminalName,
             "docker",
-            ["compose", "up", "-d", "--remove-orphans"],
+            [ "compose", "up", "-d", "--remove-orphans" ],
             this.path
         );
         if (exitCode !== 0) {
@@ -585,7 +585,7 @@ export class Stack {
             socket,
             terminalName,
             "docker",
-            ["compose", "stop"],
+            [ "compose", "stop" ],
             this.path
         );
         if (exitCode !== 0) {
@@ -603,7 +603,7 @@ export class Stack {
             socket,
             terminalName,
             "docker",
-            ["compose", "restart"],
+            [ "compose", "restart" ],
             this.path
         );
         if (exitCode !== 0) {
@@ -621,7 +621,7 @@ export class Stack {
             socket,
             terminalName,
             "docker",
-            ["compose", "down"],
+            [ "compose", "down" ],
             this.path
         );
         if (exitCode !== 0) {
@@ -642,7 +642,7 @@ export class Stack {
                 socket,
                 terminalName,
                 "git",
-                ["pull"],
+                [ "pull" ],
                 this.path
             );
             if (exitCode !== 0) {
@@ -657,7 +657,7 @@ export class Stack {
             socket,
             terminalName,
             "docker",
-            ["compose", "pull"],
+            [ "compose", "pull" ],
             this.path
         );
         if (exitCode !== 0) {
@@ -678,7 +678,7 @@ export class Stack {
             socket,
             terminalName,
             "docker",
-            ["compose", "up", "-d", "--remove-orphans"],
+            [ "compose", "up", "-d", "--remove-orphans" ],
             this.path
         );
         if (exitCode !== 0) {
@@ -746,7 +746,7 @@ export class Stack {
             this.server,
             terminalName,
             "docker",
-            ["compose", "logs", "-f", "--tail", "100"],
+            [ "compose", "logs", "-f", "--tail", "100" ],
             this.path
         );
         terminal.enableKeepAlive = true;
@@ -786,7 +786,7 @@ export class Stack {
                 this.server,
                 terminalName,
                 "docker",
-                ["compose", "exec", serviceName, shell],
+                [ "compose", "exec", serviceName, shell ],
                 this.path
             );
             terminal.rows = TERMINAL_ROWS;
@@ -803,7 +803,7 @@ export class Stack {
         try {
             let res = await childProcessAsync.spawn(
                 "docker",
-                ["compose", "ps", "--format", "json"],
+                [ "compose", "ps", "--format", "json" ],
                 {
                     cwd: this.path,
                     encoding: "utf-8",
