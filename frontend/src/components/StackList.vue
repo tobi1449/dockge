@@ -223,13 +223,13 @@ export default {
                 // Handle stacks with no suffix (from the current endpoint)
                 let [ stackName, agent ] = key.split("_");
                 const stackHasEndpoint = agent !== "";
-                agent = stackHasEndpoint ? agent: this.$t("currentEndpoint");
+                agent = stackHasEndpoint ? agent : this.$t("currentEndpoint");
 
                 if (!stacksByAgent.has(agent)) {
                     stacksByAgent.set(agent, []);
                 }
 
-                const stack = stacks[!stackHasEndpoint ? `${stackName}_`: `${stackName}_${agent}`];
+                const stack = stacks[!stackHasEndpoint ? `${stackName}_` : `${stackName}_${agent}`];
                 stacksByAgent.get(agent).push(stack);
             }
 

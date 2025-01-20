@@ -711,7 +711,7 @@ export class DockgeServer {
     }
 
     getLocalWebSocketURL() {
-        const protocol = this.isSSL() ? "wss": "ws";
+        const protocol = this.isSSL() ? "wss" : "ws";
         const host = this.config.hostname || "localhost";
         return `${protocol}://${host}:${this.config.port}`;
     }

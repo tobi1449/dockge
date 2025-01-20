@@ -111,7 +111,7 @@ export default defineComponent({
         },
 
         remember() {
-            localStorage.remember = (this.remember) ? "1": "0";
+            localStorage.remember = (this.remember) ? "1" : "0";
         },
 
         // Reload the SPA if the server version is changed.
@@ -300,7 +300,7 @@ export default defineComponent({
          * @returns Current storage
          */
         storage(): Storage {
-            return (this.remember) ? localStorage: sessionStorage;
+            return (this.remember) ? localStorage : sessionStorage;
         },
 
         getSocket(): Socket {
