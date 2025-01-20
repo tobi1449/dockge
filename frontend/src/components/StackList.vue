@@ -51,7 +51,7 @@
         </div>
 
         <div v-if="searchText === '' && $root.agentCount > 1" ref="stackList" :style="stackListStyle" class="stack-list">
-            <AgentStackList v-for="[agentName, stacks] in stackListByAgent" :agentName="agentName" :key="agentName">
+            <AgentStackList v-for="[agentName, stacks] in stackListByAgent" :key="agentName" :agentName="agentName">
                 <StackListItem
                     v-for="(stack, index) in stacks"
                     :key="index"

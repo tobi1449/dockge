@@ -20,24 +20,30 @@
                         <font-awesome-icon icon="terminal" />
                         Bash
                     </router-link>
-                    <button v-if="status !== 'running' && status !== 'healthy'"
-                            class="btn btn-primary me-2"
-                            :disabled="processing"
-                            @click="startService">
+                    <button
+                        v-if="status !== 'running' && status !== 'healthy'"
+                        class="btn btn-primary me-2"
+                        :disabled="processing"
+                        @click="startService"
+                    >
                         <font-awesome-icon icon="play" class="me-1" />
                         Start
                     </button>
-                    <button v-if="status === 'running' || status === 'healthy' || status === 'unhealthy'"
-                            class="btn btn-danger me-2"
-                            :disabled="processing"
-                            @click="stopService">
+                    <button
+                        v-if="status === 'running' || status === 'healthy' || status === 'unhealthy'"
+                        class="btn btn-danger me-2"
+                        :disabled="processing"
+                        @click="stopService"
+                    >
                         <font-awesome-icon icon="stop" class="me-1" />
                         Stop
                     </button>
-                    <button v-if="status === 'running' || status === 'healthy' || status === 'unhealthy'"
-                            class="btn btn-warning me-2"
-                            :disabled="processing"
-                            @click="restartService">
+                    <button
+                        v-if="status === 'running' || status === 'healthy' || status === 'unhealthy'"
+                        class="btn btn-warning me-2"
+                        :disabled="processing"
+                        @click="restartService"
+                    >
                         <font-awesome-icon icon="sync" class="me-1" />
                         Restart
                     </button>
