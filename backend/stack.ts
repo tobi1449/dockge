@@ -1,11 +1,13 @@
-import { DockgeServer } from "./dockge-server";
-import fs, { promises as fsAsync } from "fs";
-import { log } from "./log";
+import {DockgeServer} from "./dockge-server";
+import fs, {promises as fsAsync} from "fs";
+import {log} from "./log";
 import yaml from "yaml";
-import { DockgeSocket, fileExists, ValidationError } from "./util-server";
+import {DockgeSocket, fileExists, ValidationError} from "./util-server";
 import path from "path";
 import {
     acceptedComposeFileNames,
+    acceptedComposeFileNamePattern,
+    ArbitrarilyNestedLooseObject,
     COMBINED_TERMINAL_COLS,
     COMBINED_TERMINAL_ROWS,
     CREATED_FILE,
@@ -16,9 +18,9 @@ import {
     RUNNING, TERMINAL_ROWS,
     UNKNOWN
 } from "../common/util-common";
-import { InteractiveTerminal, Terminal } from "./terminal";
+import {InteractiveTerminal, Terminal} from "./terminal";
 import childProcessAsync from "promisify-child-process";
-import { Settings } from "./settings";
+import {Settings} from "./settings";
 
 export class Stack {
 
@@ -30,11 +32,11 @@ export class Stack {
     protected _composeFileName: string = "compose.yaml";
     protected server: DockgeServer;
 
-    protected combinedTerminal? : Terminal;
+    protected combinedTerminal?: Terminal;
 
     protected static managedStackList: Map<string, Stack> = new Map();
 
-    constructor(server : DockgeServer, name : string, composeYAML? : string, composeENV? : string, skipFSOperations = false) {
+    constructor(server: DockgeServer, name: string, composeYAML?: string, composeENV?: string, skipFSOperations = false) {
         this.name = name;
         this.server = server;
         this._composeYAML = composeYAML;
@@ -51,7 +53,7 @@ export class Stack {
         }
     }
 
-    async toJSON(endpoint : string) : Promise<object> {
+    async toJSON(endpoint: string): Promise<object> {
 
         // Since we have multiple agents now, embed primary hostname in the stack object too.
         let primaryHostname = await Settings.get("primaryHostname");
@@ -78,7 +80,7 @@ export class Stack {
         };
     }
 
-    toSimpleJSON(endpoint : string) : object {
+    toSimpleJSON(endpoint: string): object {
         return {
             name: this.name,
             status: this._status,
@@ -92,8 +94,8 @@ export class Stack {
     /**
      * Get the status of the stack from `docker compose ps --format json`
      */
-    async ps() : Promise<object> {
-        let res = await childProcessAsync.spawn("docker", [ "compose", "ps", "--format", "json" ], {
+    async ps(): Promise<object> {
+        let res = await childProcessAsync.spawn("docker", ["compose", "ps", "--format", "json"], {
             cwd: this.path,
             encoding: "utf-8",
         });
@@ -103,11 +105,11 @@ export class Stack {
         return JSON.parse(res.stdout.toString());
     }
 
-    get isManagedByDockge() : boolean {
-        return fs.existsSync(this.path) && fs.statSync(this.path).isDirectory();
+    get isManagedByDockge(): boolean {
+        return !!this._configFilePath && this._configFilePath.startsWith(this.server.stacksDir);
     }
 
-    get status() : number {
+    get status(): number {
         return this._status;
     }
 
@@ -130,7 +132,7 @@ export class Stack {
         }
     }
 
-    get composeYAML() : string {
+    get composeYAML(): string {
         if (this._composeYAML === undefined) {
             try {
                 this._composeYAML = fs.readFileSync(path.join(this.path, this._composeFileName), "utf-8");
@@ -141,7 +143,7 @@ export class Stack {
         return this._composeYAML;
     }
 
-    get composeENV() : string {
+    get composeENV(): string {
         if (this._composeENV === undefined) {
             try {
                 this._composeENV = fs.readFileSync(path.join(this.path, ".env"), "utf-8");
@@ -152,11 +154,11 @@ export class Stack {
         return this._composeENV;
     }
 
-    get path() : string {
-        return path.join(this.server.stacksDir, this.name);
+    get path(): string {
+        return this._configFilePath || "";
     }
 
-    get fullPath() : string {
+    get fullPath(): string {
         let dir = this.path;
 
         // Compose up via node-pty
@@ -175,7 +177,7 @@ export class Stack {
      * Save the stack to the disk
      * @param isAdd
      */
-    async save(isAdd : boolean) {
+    async save(isAdd: boolean) {
         this.validate();
 
         let dir = this.path;
@@ -206,18 +208,18 @@ export class Stack {
         }
     }
 
-    async deploy(socket : DockgeSocket) : Promise<number> {
+    async deploy(socket: DockgeSocket): Promise<number> {
         const terminalName = getComposeTerminalName(socket.endpoint, this.name);
-        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", [ "compose", "up", "-d", "--remove-orphans" ], this.path);
+        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", ["compose", "up", "-d", "--remove-orphans"], this.path);
         if (exitCode !== 0) {
             throw new Error("Failed to deploy, please check the terminal output for more information.");
         }
         return exitCode;
     }
 
-    async delete(socket: DockgeSocket) : Promise<number> {
+    async delete(socket: DockgeSocket): Promise<number> {
         const terminalName = getComposeTerminalName(socket.endpoint, this.name);
-        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", [ "compose", "down", "--remove-orphans" ], this.path);
+        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", ["compose", "down", "--remove-orphans"], this.path);
         if (exitCode !== 0) {
             throw new Error("Failed to delete, please check the terminal output for more information.");
         }
@@ -250,7 +252,7 @@ export class Stack {
      * @param {string} filename - The name of the directory to check for the compose file.
      * @returns {Promise<boolean>} A promise that resolves to a boolean indicating whether any compose file exists.
      */
-    static async composeFileExists(stacksDir : string, filename : string) : Promise<boolean> {
+    static async composeFileExists(stacksDir: string, filename: string): Promise<boolean> {
         let filenamePath = path.join(stacksDir, filename);
         // Check if any compose file exists
         for (const filename of acceptedComposeFileNames) {
@@ -262,72 +264,107 @@ export class Stack {
         return false;
     }
 
-    static async getStackList(server : DockgeServer, useCacheForManaged = false) : Promise<Map<string, Stack>> {
-        let stacksDir = server.stacksDir;
-        let stackList : Map<string, Stack>;
+    static async getStackList(server: DockgeServer, useCacheForManaged = false): Promise<Map<string, Stack>> {
+        let stackList: Map<string, Stack> = new Map<string, Stack>();
 
         // Use cached stack list?
         if (useCacheForManaged && this.managedStackList.size > 0) {
             stackList = this.managedStackList;
-        } else {
-            stackList = new Map<string, Stack>();
-
-            // Scan the stacks directory, and get the stack list
-            let filenameList = await fsAsync.readdir(stacksDir);
-
-            for (let filename of filenameList) {
-                try {
-                    // Check if it is a directory
-                    let stat = await fsAsync.stat(path.join(stacksDir, filename));
-                    if (!stat.isDirectory()) {
-                        continue;
-                    }
-                    // If no compose file exists, skip it
-                    if (!await Stack.composeFileExists(stacksDir, filename)) {
-                        continue;
-                    }
-                    let stack = await this.getStack(server, filename);
-                    stack._status = CREATED_FILE;
-                    stackList.set(filename, stack);
-                } catch (e) {
-                    if (e instanceof Error) {
-                        log.warn("getStackList", `Failed to get stack ${filename}, error: ${e.message}`);
-                    }
-                }
-            }
-
-            // Cache by copying
-            this.managedStackList = new Map(stackList);
+            return stackList;
         }
 
         // Get status from docker compose ls
-        let res = await childProcessAsync.spawn("docker", [ "compose", "ls", "--all", "--format", "json" ], {
+        let res = await childProcessAsync.spawn("docker", ["compose", "ls", "--all", "--format", "json"], {
             encoding: "utf-8",
         });
 
         if (!res.stdout) {
+            log.warn("getStackList", "No response from docker compose daemon when attempting to retrieve list of stacks");
             return stackList;
         }
 
         let composeList = JSON.parse(res.stdout.toString());
+        let pathSearchTree: ArbitrarilyNestedLooseObject = {}; // search structure for matching paths
 
         for (let composeStack of composeList) {
-            let stack = stackList.get(composeStack.Name);
+            try {
+                let stack = new Stack(server, composeStack.Name);
+                stack._status = this.statusConvert(composeStack.Status);
 
-            // This stack probably is not managed by Dockge, but we still want to show it
-            if (!stack) {
-                // Skip the dockge stack if it is not managed by Dockge
-                if (composeStack.Name === "dockge") {
+                let composeFiles = composeStack.ConfigFiles.split(","); // it is possible for a project to have more than one config file
+                stack._configFilePath = path.dirname(composeFiles[0]);
+                stack._composeFileName = path.basename(composeFiles[0]);
+                if (stack.name === "dockge" && !stack.isManagedByDockge) {
+                    // skip dockge if not managed by dockge
                     continue;
                 }
-                stack = new Stack(server, composeStack.Name);
                 stackList.set(composeStack.Name, stack);
-            }
 
-            stack._status = this.statusConvert(composeStack.Status);
-            stack._configFilePath = composeStack.ConfigFiles;
+                // add project path to search tree so we can quickly decide if we have seen it before later
+                // e.g. path "/opt/stacks" would yield the tree { opt: stacks: {} }
+                path.join(stack._configFilePath, stack._composeFileName).split(path.sep).reduce((searchTree, pathComponent) => {
+                    if (pathComponent == "") {
+                        return searchTree;
+                    }
+                    if (!searchTree[pathComponent]) {
+                        searchTree[pathComponent] = {};
+                    }
+                    return searchTree[pathComponent];
+                }, pathSearchTree);
+            } catch (e) {
+                if (e instanceof Error) {
+                    log.error("getStackList", `Failed to get stack ${composeStack.Name}, error: ${e.message}`);
+                }
+            }
         }
 
+        // Search stacks directory for compose files not associated with a running compose project (ie. never started through CLI)
+        try {
+            // Hopefully the user has access to everything in this directory! If they don't, log the error. It is a small price to pay for fast searching.
+            let rawFilesList = fs.readdirSync(server.stacksDir, {
+                recursive: true,
+                withFileTypes: true
+            });
+            let acceptedComposeFiles = rawFilesList.filter((dirEnt: fs.Dirent) => dirEnt.isFile() && !!dirEnt.name.match(acceptedComposeFileNamePattern));
+            log.debug("getStackList", `Folder scan yielded ${acceptedComposeFiles.length} files`);
+            for (let composeFile of acceptedComposeFiles) {
+                // check if we have seen this file before
+                let fullPath = composeFile.parentPath;
+                let previouslySeen = fullPath.split(path.sep).reduce((searchTree: ArbitrarilyNestedLooseObject | boolean, pathComponent) => {
+                    if (pathComponent == "") {
+                        return searchTree;
+                    }
+
+                    // end condition
+                    if (searchTree == false || !(searchTree as ArbitrarilyNestedLooseObject)[pathComponent]) {
+                        return false;
+                    }
+
+                    // path (so far) has been previously seen
+                    return (searchTree as ArbitrarilyNestedLooseObject)[pathComponent];
+                }, pathSearchTree);
+                if (!previouslySeen) {
+                    // a file with an accepted compose filename has been found that did not appear in `docker compose ls`. Use its config file path as a temp name
+                    log.info("getStackList", `Found project unknown to docker compose: ${fullPath}/${composeFile.name}`);
+                    let [configFilePath, configFilename, inferredProjectName] = [fullPath, composeFile.name, path.basename(fullPath)];
+                    if (stackList.get(inferredProjectName)) {
+                        log.info("getStackList", `... but it was ignored. A project named ${inferredProjectName} already exists`);
+                    } else {
+                        let stack = new Stack(server, inferredProjectName);
+                        stack._status = UNKNOWN;
+                        stack._configFilePath = configFilePath;
+                        stack._composeFileName = configFilename;
+                        stackList.set(inferredProjectName, stack);
+                    }
+                }
+            }
+        } catch (e) {
+            if (e instanceof Error) {
+                log.error("getStackList", `Got error searching for undiscovered stacks:\n${e.message}`);
+            }
+        }
+
+        this.managedStackList = stackList;
         return stackList;
     }
 
@@ -335,10 +372,10 @@ export class Stack {
      * Get the status list, it will be used to update the status of the stacks
      * Not all status will be returned, only the stack that is deployed or created to `docker compose` will be returned
      */
-    static async getStatusList() : Promise<Map<string, number>> {
+    static async getStatusList(): Promise<Map<string, number>> {
         let statusList = new Map<string, number>();
 
-        let res = await childProcessAsync.spawn("docker", [ "compose", "ls", "--all", "--format", "json" ], {
+        let res = await childProcessAsync.spawn("docker", ["compose", "ls", "--all", "--format", "json"], {
             encoding: "utf-8",
         });
 
@@ -360,7 +397,7 @@ export class Stack {
      * Input Example: "exited(1), running(1)"
      * @param status
      */
-    static statusConvert(status : string) : number {
+    static statusConvert(status: string): number {
         if (status.startsWith("created")) {
             return CREATED_STACK;
         } else if (status.includes("exited")) {
@@ -374,69 +411,58 @@ export class Stack {
         }
     }
 
-    static async getStack(server: DockgeServer, stackName: string, skipFSOperations = false) : Promise<Stack> {
-        let dir = path.join(server.stacksDir, stackName);
-
+    static async getStack(server: DockgeServer, stackName: string, skipFSOperations = false): Promise<Stack> {
+        let stack: Stack | undefined;
         if (!skipFSOperations) {
-            if (!await fileExists(dir) || !(await fsAsync.stat(dir)).isDirectory()) {
-                // Maybe it is a stack managed by docker compose directly
-                let stackList = await this.getStackList(server, true);
-                let stack = stackList.get(stackName);
-
-                if (stack) {
-                    return stack;
-                } else {
-                    // Really not found
-                    throw new ValidationError("Stack not found");
-                }
+            let stackList = await this.getStackList(server, true);
+            stack = stackList.get(stackName);
+            if (!stack || !await fileExists(stack.path) || !(await fsAsync.stat(stack.path)).isDirectory()) {
+                throw new ValidationError(`getStack; Stack ${stackName} not found`);
             }
         } else {
-            //log.debug("getStack", "Skip FS operations");
+            // search for known stack with this name
+            if (this.managedStackList) {
+                stack = this.managedStackList.get(stackName);
+            }
+            if (!this.managedStackList || !stack) {
+                stack = new Stack(server, stackName, undefined, undefined, true);
+                stack._status = UNKNOWN;
+                stack._configFilePath = path.resolve(server.stacksDir, stackName);
+            }
         }
-
-        let stack : Stack;
-
-        if (!skipFSOperations) {
-            stack = new Stack(server, stackName);
-        } else {
-            stack = new Stack(server, stackName, undefined, undefined, true);
-        }
-
-        stack._status = UNKNOWN;
-        stack._configFilePath = path.resolve(dir);
         return stack;
     }
 
     async start(socket: DockgeSocket) {
         const terminalName = getComposeTerminalName(socket.endpoint, this.name);
-        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", [ "compose", "up", "-d", "--remove-orphans" ], this.path);
+        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", ["compose", "up", "-d", "--remove-orphans"], this.path);
         if (exitCode !== 0) {
             throw new Error("Failed to start, please check the terminal output for more information.");
         }
         return exitCode;
     }
 
-    async stop(socket: DockgeSocket) : Promise<number> {
+    async stop(socket: DockgeSocket): Promise<number> {
         const terminalName = getComposeTerminalName(socket.endpoint, this.name);
-        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", [ "compose", "stop" ], this.path);
+        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", ["compose", "stop"], this.path);
         if (exitCode !== 0) {
             throw new Error("Failed to stop, please check the terminal output for more information.");
         }
         return exitCode;
     }
 
-    async restart(socket: DockgeSocket) : Promise<number> {
+    async restart(socket: DockgeSocket): Promise<number> {
         const terminalName = getComposeTerminalName(socket.endpoint, this.name);
-        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", [ "compose", "restart" ], this.path);
+        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", ["compose", "restart"], this.path);
         if (exitCode !== 0) {
             throw new Error("Failed to restart, please check the terminal output for more information.");
         }
         return exitCode;
     }
 
-    async down(socket: DockgeSocket) : Promise<number> {
+    async down(socket: DockgeSocket): Promise<number> {
         const terminalName = getComposeTerminalName(socket.endpoint, this.name);
-        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", [ "compose", "down" ], this.path);
+        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", ["compose", "down"], this.path);
         if (exitCode !== 0) {
             throw new Error("Failed to down, please check the terminal output for more information.");
         }
@@ -445,7 +471,7 @@ export class Stack {
 
     async update(socket: DockgeSocket) {
         const terminalName = getComposeTerminalName(socket.endpoint, this.name);
-        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", [ "compose", "pull", "--policy", "missing" ], this.path);
+        let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", ["compose", "pull"], this.path);
         if (exitCode !== 0) {
             throw new Error("Failed to pull, please check the terminal output for more information.");
         }
@@ -457,7 +483,7 @@ export class Stack {
             return exitCode;
         }
 
-        exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", [ "compose", "up", "-d", "--remove-orphans" ], this.path);
+        exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", ["compose", "up", "-d", "--remove-orphans"], this.path);
         if (exitCode !== 0) {
             throw new Error("Failed to restart, please check the terminal output for more information.");
         }
@@ -466,7 +492,7 @@ export class Stack {
 
     async joinCombinedTerminal(socket: DockgeSocket) {
         const terminalName = getCombinedTerminalName(socket.endpoint, this.name);
-        const terminal = Terminal.getOrCreateTerminal(this.server, terminalName, "docker", [ "compose", "logs", "-f", "--tail", "100" ], this.path);
+        const terminal = Terminal.getOrCreateTerminal(this.server, terminalName, "docker", ["compose", "logs", "-f", "--tail", "100"], this.path);
         terminal.enableKeepAlive = true;
         terminal.rows = COMBINED_TERMINAL_ROWS;
         terminal.cols = COMBINED_TERMINAL_COLS;
@@ -482,12 +508,12 @@ export class Stack {
         }
     }
 
-    async joinContainerTerminal(socket: DockgeSocket, serviceName: string, shell : string = "sh", index: number = 0) {
+    async joinContainerTerminal(socket: DockgeSocket, serviceName: string, shell: string = "sh", index: number = 0) {
         const terminalName = getContainerExecTerminalName(socket.endpoint, this.name, serviceName, index);
         let terminal = Terminal.getTerminal(terminalName);
 
         if (!terminal) {
-            terminal = new InteractiveTerminal(this.server, terminalName, "docker", [ "compose", "exec", serviceName, shell ], this.path);
+            terminal = new InteractiveTerminal(this.server, terminalName, "docker", ["compose", "exec", serviceName, shell], this.path);
             terminal.rows = TERMINAL_ROWS;
             log.debug("joinContainerTerminal", "Terminal created");
         }
@@ -500,7 +526,7 @@ export class Stack {
         let statusList = new Map<string, Array<object>>();
 
         try {
-            let res = await childProcessAsync.spawn("docker", [ "compose", "ps", "--format", "json" ], {
+            let res = await childProcessAsync.spawn("docker", ["compose", "ps", "--format", "json"], {
                 cwd: this.path,
                 encoding: "utf-8",
             });
