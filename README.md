@@ -137,7 +137,7 @@ services:
       # Tell Dockge where is your stacks directory
       DOCKGE_STACKS_DIR: /opt/stacks
     ports:
-      # Host Port: Container Port
+      # Host Port : Container Port
       - 5001:5001
     volumes:
       - type: bind
