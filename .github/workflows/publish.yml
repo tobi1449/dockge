@@ -1,7 +1,7 @@
 ﻿name: Publish to ghcr.io
 
 env:
-  IMAGE_NAME: Dockge
+  IMAGE_NAME: dockge
 
 on:
   release:
