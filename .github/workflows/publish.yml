@@ -6,6 +6,8 @@ env:
 on:
   release:
     types: [released]
+  workflow_dispatch:
+
 
 jobs:
   build-and-publish-image:
