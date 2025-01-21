@@ -41,9 +41,11 @@
                         {{ $t("updateStack") }}
                     </button>
 
-                    <button v-if="!isEditMode && stack.isGitRepo" class="btn btn-normal" :disabled="processing"
-                            @click="gitSync">
-                        <font-awesome-icon icon="rotate" class="me-1"/>
+                    <button
+                        v-if="!isEditMode && stack.isGitRepo" class="btn btn-normal" :disabled="processing"
+                        @click="gitSync"
+                    >
+                        <font-awesome-icon icon="rotate" class="me-1" />
                         {{ $t("gitSync") }}
                     </button>
 
@@ -170,8 +172,10 @@
                                         readonly
                                         @click="selectText"
                                     />
-                                    <button class="btn btn-outline-primary" type="button"
-                                            @click="copyWebhookToClipboard">
+                                    <button
+                                        class="btn btn-outline-primary" type="button"
+                                        @click="copyWebhookToClipboard"
+                                    >
                                         {{ $t("copy") }}
                                     </button>
                                 </div>
@@ -698,7 +702,7 @@ export default {
                 }
 
                 this.bindTerminal();
-                
+
                 this.$root.emitAgent(this.stack.endpoint, "deployStack", this.stack.name, this.stack.composeYAML, this.stack.composeENV, this.isAdd, (res) => {
                     this.processing = false;
                     this.$root.toastRes(res);

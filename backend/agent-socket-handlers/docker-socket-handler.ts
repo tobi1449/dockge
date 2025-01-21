@@ -49,7 +49,7 @@ export class DockerSocketHandler extends AgentSocketHandler {
                     await stack.delete(socket);
                 }
 
-                let exitCode = await Terminal.exec(server, socket, terminalName, "git", ["clone", "-b", branch, gitUrl, stackName], server.stacksDir);
+                let exitCode = await Terminal.exec(server, socket, terminalName, "git", [ "clone", "-b", branch, gitUrl, stackName ], server.stacksDir);
                 if (exitCode !== 0) {
                     throw new Error(`Failed to clone git repo [Exit Code ${exitCode}]`);
                 }

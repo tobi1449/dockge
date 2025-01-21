@@ -145,5 +145,6 @@
     "copy": "Copy",
     "GitOps": "GitOps",
     "GitConfig": "Git Configuration",
-    "gitSync": "Sync Repo"
+    "gitSync": "Sync Repo",
+    "GlobalEnv": "Global .env"
 }
