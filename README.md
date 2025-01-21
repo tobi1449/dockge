@@ -6,8 +6,6 @@
 
 A fancy, easy-to-use and reactive self-hosted docker compose stack-oriented manager forked from louislam/dockge that has had several Pull Requests merged.
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/cmcooper1980/dockge?logo=github&style=flat)](https://github.com/cmcooper1980/dockge) [![Docker Pulls](https://img.shields.io/docker/pulls/cmcooper1980/dockge?logo=docker)](https://hub.docker.com/r/cmcooper1980/dockge/tags) [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/cmcooper1980/dockge/latest?label=docker%20image%20ver.)](https://hub.docker.com/r/cmcooper1980/dockge/tags) [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/cmcooper1980/dockge/master?logo=github)](https://github.com/cmcooper1980/dockge/commits/master/)
-
 <img src="https://github.com/louislam/dockge/assets/1336778/26a583e1-ecb1-4a8d-aedf-76157d714ad7" width="900" alt="" />
 
 View Video: https://youtu.be/AWAlOQeNpgU?t=48
@@ -73,7 +71,7 @@ mkdir -p /opt/stacks /opt/dockge
 cd /opt/dockge
 
 # Download the compose.yaml
-curl https://raw.githubusercontent.com/cmcooper1980/dockge/master/compose.yaml --output compose.yaml
+curl https://raw.githubusercontent.com/tobi1449/dockge/master/compose.yaml --output compose.yaml
 
 # Start the server
 docker compose up -d
@@ -130,7 +128,7 @@ Dockge is built on top of [Compose V2](https://docs.docker.com/compose/migrate/)
 ```
 services:
   dockge:
-    image: cmcooper1980/dockge:experimental
+    image: ghcr.io/tobi1449/dockge:latest
     container_name: dockge
     restart: unless-stopped
     environment:

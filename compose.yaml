@@ -1,6 +1,6 @@
 services:
   dockge:
-    image: cmcooper1980/dockge
+    image: ghcr.io/tobi1449/dockge
     build:
       context: .
       dockerfile: docker/Dockerfile
