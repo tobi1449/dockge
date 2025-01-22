@@ -3,7 +3,8 @@
         <div>
             <h1 v-if="isAdd" class="mb-3">{{ $t("compose") }}</h1>
             <h1 v-else class="mb-3">
-                <Uptime :stack="globalStack" :pill="true" /> {{ stack.name }}
+                <Uptime :stack="globalStack" :pill="true"/>
+                {{ stack.name }}
                 <span v-if="$root.agentCount > 1" class="agent-name">
                     ({{ endpointDisplay }})
                 </span>
@@ -12,32 +13,36 @@
             <div v-if="stack.isManagedByDockge" class="mb-3">
                 <div class="btn-group me-2" role="group">
                     <button v-if="isEditMode" class="btn btn-primary" :disabled="processing" @click="deployStack">
-                        <font-awesome-icon icon="rocket" class="me-1" />
+                        <font-awesome-icon icon="rocket" class="me-1"/>
                         {{ $t("deployStack") }}
                     </button>
 
                     <button v-if="isEditMode" class="btn btn-normal" :disabled="processing" @click="saveStack">
-                        <font-awesome-icon icon="save" class="me-1" />
+                        <font-awesome-icon icon="save" class="me-1"/>
                         {{ $t("saveStackDraft") }}
                     </button>
 
                     <button v-if="!isEditMode" class="btn btn-secondary" :disabled="processing" @click="enableEditMode">
-                        <font-awesome-icon icon="pen" class="me-1" />
+                        <font-awesome-icon icon="pen" class="me-1"/>
                         {{ $t("editStack") }}
                     </button>
 
-                    <button v-if="!isEditMode && !active" class="btn btn-primary" :disabled="processing" @click="startStack">
-                        <font-awesome-icon icon="play" class="me-1" />
+                    <button v-if="!isEditMode && !active" class="btn btn-primary" :disabled="processing"
+                            @click="startStack"
+                    >
+                        <font-awesome-icon icon="play" class="me-1"/>
                         {{ $t("startStack") }}
                     </button>
 
-                    <button v-if="!isEditMode && active" class="btn btn-normal " :disabled="processing" @click="restartStack">
-                        <font-awesome-icon icon="rotate" class="me-1" />
+                    <button v-if="!isEditMode && active" class="btn btn-normal " :disabled="processing"
+                            @click="restartStack"
+                    >
+                        <font-awesome-icon icon="rotate" class="me-1"/>
                         {{ $t("restartStack") }}
                     </button>
 
                     <button v-if="!isEditMode" class="btn btn-normal" :disabled="processing" @click="updateStack">
-                        <font-awesome-icon icon="cloud-arrow-down" class="me-1" />
+                        <font-awesome-icon icon="cloud-arrow-down" class="me-1"/>
                         {{ $t("updateStack") }}
                     </button>
 
@@ -45,26 +50,32 @@
                         v-if="!isEditMode && stack.isGitRepo" class="btn btn-normal" :disabled="processing"
                         @click="gitSync"
                     >
-                        <font-awesome-icon icon="rotate" class="me-1" />
+                        <font-awesome-icon icon="rotate" class="me-1"/>
                         {{ $t("gitSync") }}
                     </button>
 
-                    <button v-if="!isEditMode && active" class="btn btn-normal" :disabled="processing" @click="stopStack">
-                        <font-awesome-icon icon="stop" class="me-1" />
+                    <button v-if="!isEditMode && active" class="btn btn-normal" :disabled="processing"
+                            @click="stopStack"
+                    >
+                        <font-awesome-icon icon="stop" class="me-1"/>
                         {{ $t("stopStack") }}
                     </button>
 
                     <BDropdown right text="" variant="normal">
                         <BDropdownItem @click="downStack">
-                            <font-awesome-icon icon="stop" class="me-1" />
+                            <font-awesome-icon icon="stop" class="me-1"/>
                             {{ $t("downStack") }}
                         </BDropdownItem>
                     </BDropdown>
                 </div>
 
-                <button v-if="isEditMode && !isAdd" class="btn btn-normal" :disabled="processing" @click="discardStack">{{ $t("discardStack") }}</button>
-                <button v-if="!isEditMode" class="btn btn-danger" :disabled="processing" @click="showDeleteDialog = !showDeleteDialog">
-                    <font-awesome-icon icon="trash" class="me-1" />
+                <button v-if="isEditMode && !isAdd" class="btn btn-normal" :disabled="processing" @click="discardStack">
+                    {{ $t("discardStack") }}
+                </button>
+                <button v-if="!isEditMode" class="btn btn-danger" :disabled="processing"
+                        @click="showDeleteDialog = !showDeleteDialog"
+                >
+                    <font-awesome-icon icon="trash" class="me-1"/>
                     {{ $t("deleteStack") }}
                 </button>
             </div>
@@ -98,7 +109,9 @@
                             <!-- Stack Name -->
                             <div>
                                 <label for="name" class="form-label">{{ $t("stackName") }}</label>
-                                <input id="name" v-model="stack.name" type="text" class="form-control" required @blur="stackNameToLowercase">
+                                <input id="name" v-model="stack.name" type="text" class="form-control" required
+                                       @blur="stackNameToLowercase"
+                                >
                                 <div class="form-text">{{ $t("Lowercase only") }}</div>
                             </div>
 
@@ -106,8 +119,11 @@
                             <div class="mt-3">
                                 <label for="name" class="form-label">{{ $t("dockgeAgent") }}</label>
                                 <select v-model="stack.endpoint" class="form-select">
-                                    <option v-for="(agent, endpoint) in $root.agentList" :key="endpoint" :value="endpoint" :disabled="$root.agentStatusList[endpoint] != 'online'">
-                                        ({{ $root.agentStatusList[endpoint] }}) {{ (agent.name !== '') ? agent.name: agent.url || $t("Controller") }}
+                                    <option v-for="(agent, endpoint) in $root.agentList" :key="endpoint"
+                                            :value="endpoint" :disabled="$root.agentStatusList[endpoint] != 'online'"
+                                    >
+                                        ({{ $root.agentStatusList[endpoint] }})
+                                        {{ (agent.name !== "") ? agent.name : agent.url || $t("Controller") }}
                                     </option>
                                 </select>
                             </div>
@@ -187,18 +203,6 @@
                     <div v-if="!stack.isGitRepo || (stack.isGitRepo && !isEditMode)">
                         <h4 class="mb-3">{{ $tc("container", 2) }}</h4>
 
-                        <div v-if="isEditMode" class="input-group mb-3">
-                            <input
-                                v-model="newContainerName"
-                                :placeholder="$t(`New Container Name...`)"
-                                class="form-control"
-                                @keyup.enter="addContainer"
-                            />
-                            <button class="btn btn-primary" @click="addContainer">
-                                {{ $t("addContainer") }}
-                            </button>
-                        </div>
-
                         <div v-if="isEditMode && !stack.isGitRepo" class="input-group mb-3">
                             <input
                                 v-model="newContainerName"
@@ -224,7 +228,11 @@
                         </div>
                     </div>
 
-                    <button v-if="false && isEditMode && !stack.isGitRepo && jsonConfig.services && Object.keys(jsonConfig.services).length > 0" class="btn btn-normal mb-3" @click="addContainer">{{ $t("addContainer") }}</button>
+                    <button
+                        v-if="false && isEditMode && !stack.isGitRepo && jsonConfig.services && Object.keys(jsonConfig.services).length > 0"
+                        class="btn btn-normal mb-3" @click="addContainer"
+                    >{{ $t("addContainer") }}
+                    </button>
                     <!-- General -->
                     <div v-if="isEditMode && !stack.isGitRepo">
                         <h4 class="mb-3">{{ $t("extra") }}</h4>
@@ -234,7 +242,9 @@
                                 <label class="form-label">
                                     {{ $tc("url", 2) }}
                                 </label>
-                                <ArrayInput name="urls" :display-name="$t('url')" placeholder="https://" object-type="x-dockge" />
+                                <ArrayInput name="urls" :display-name="$t('url')" placeholder="https://"
+                                            object-type="x-dockge"
+                                />
                             </div>
                         </div>
                     </div>
@@ -300,7 +310,7 @@
                         <!-- Networks -->
                         <h4 class="mb-3">{{ $tc("network", 2) }}</h4>
                         <div class="shadow-box big-padding mb-3">
-                            <NetworkInput />
+                            <NetworkInput/>
                         </div>
                     </div>
 
@@ -343,7 +353,7 @@ import {
     getCombinedTerminalName,
     getComposeTerminalName,
     PROGRESS_TERMINAL_ROWS,
-    RUNNING
+    RUNNING,
 } from "../../../common/util-common";
 import { BModal } from "bootstrap-vue-next";
 import NetworkInput from "../components/NetworkInput.vue";
@@ -366,7 +376,7 @@ let dockerStatsTimeout = null;
 let prismjsSymbolDefinition = {
     "symbol": {
         pattern: /(?<!\$)\$(\{[^{}]*\}|\w+)/,
-    }
+    },
 };
 
 export default {
@@ -394,8 +404,7 @@ export default {
             progressTerminalRows: PROGRESS_TERMINAL_ROWS,
             combinedTerminalRows: COMBINED_TERMINAL_ROWS,
             combinedTerminalCols: COMBINED_TERMINAL_COLS,
-            stack: {
-            },
+            stack: {},
             serviceStatusList: {},
             dockerStats: {},
             isEditMode: false,
@@ -531,7 +540,7 @@ export default {
 
         $route(to, from) {
 
-        }
+        },
     },
     mounted() {
         if (this.isAdd) {
@@ -636,7 +645,8 @@ export default {
 
             // Leave Combined Terminal
             console.debug("leaveCombinedTerminal", this.endpoint, this.stack.name);
-            this.$root.emitAgent(this.endpoint, "leaveCombinedTerminal", this.stack.name, () => {});
+            this.$root.emitAgent(this.endpoint, "leaveCombinedTerminal", this.stack.name, () => {
+            });
         },
 
         bindTerminal() {
@@ -800,7 +810,7 @@ export default {
         highlighterYAML(code) {
             if (!languages.yaml_with_symbols) {
                 languages.yaml_with_symbols = languages.insertBefore("yaml", "punctuation", {
-                    "symbol": prismjsSymbolDefinition["symbol"]
+                    "symbol": prismjsSymbolDefinition["symbol"],
                 });
             }
             return highlight(code, languages.yaml_with_symbols);
@@ -811,11 +821,11 @@ export default {
                 languages.docker_env = {
                     "comment": {
                         pattern: /(^#| #).*$/m,
-                        greedy: true
+                        greedy: true,
                     },
                     "keyword": {
                         pattern: /^\w*(?=[:=])/m,
-                        greedy: true
+                        greedy: true,
                     },
                     "value": {
                         pattern: /(?<=[:=]).*?((?= #)|$)/m,
@@ -827,7 +837,7 @@ export default {
                                 },
                                 {
                                     pattern: /^ *".*?(?<!\\)"|^.*$/m,
-                                    inside: prismjsSymbolDefinition
+                                    inside: prismjsSymbolDefinition,
                                 },
                             ],
                         },
@@ -863,7 +873,10 @@ export default {
 
         yamlCodeChange() {
             try {
-                let { config, doc } = this.yamlToJSON(this.stack.composeYAML);
+                let {
+                    config,
+                    doc,
+                } = this.yamlToJSON(this.stack.composeYAML);
 
                 this.yamlDoc = doc;
                 this.jsonConfig = config;
@@ -916,7 +929,7 @@ export default {
             let element = this.$refs.containerList.lastElementChild;
             element.scrollIntoView({
                 block: "start",
-                behavior: "smooth"
+                behavior: "smooth",
             });
         },
 
@@ -975,7 +988,7 @@ export default {
         selectText(event) {
             event.target.select();
         },
-    }
+    },
 };
 </script>
 
