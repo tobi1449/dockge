@@ -162,8 +162,8 @@ services:
       # ⚠️ READ IT CAREFULLY. If you did it wrong, your data could end up writing into a WRONG PATH.
       # ⚠️ 1. FULL path only. No relative path (MUST)
       # ⚠️ 2. source: and target: can be your preference but have to match, the environment variable
-      #      DOCKGE_STACKS_DIR also has to match and is what tells dockge where your stacks
-      #      directory is in the container
+      #       DOCKGE_STACKS_DIR also has to match and is what tells dockge where your stacks
+      #       directory is in the container
       - type: bind
         source: /opt/stacks
         target: /opt/stacks
