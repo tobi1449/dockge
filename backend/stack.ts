@@ -16,7 +16,7 @@ import {
     getComposeTerminalName, getContainerExecTerminalName,
     PROGRESS_TERMINAL_ROWS,
     RUNNING, TERMINAL_ROWS,
-    UNKNOWN
+    UNKNOWN,
 } from "../common/util-common";
 import { InteractiveTerminal, Terminal } from "./terminal";
 import childProcessAsync from "promisify-child-process";
@@ -275,7 +275,7 @@ export class Stack {
         // Remove the stack folder
         await fsAsync.rm(this.path, {
             recursive: true,
-            force: true
+            force: true,
         });
 
         return exitCode;
@@ -371,7 +371,7 @@ export class Stack {
             // Hopefully the user has access to everything in this directory! If they don't, log the error. It is a small price to pay for fast searching.
             let rawFilesList = fs.readdirSync(server.stacksDir, {
                 recursive: true,
-                withFileTypes: true
+                withFileTypes: true,
             });
             let acceptedComposeFiles = rawFilesList.filter((dirEnt: fs.Dirent) => dirEnt.isFile() && !!dirEnt.name.match(acceptedComposeFileNamePattern));
             log.debug("getStackList", `Folder scan yielded ${acceptedComposeFiles.length} files`);
@@ -481,7 +481,7 @@ export class Stack {
         return stack;
     }
 
-    getComposeOptions(command : string, ...extraOptions : string[]) {
+    getComposeOptions(command: string, ...extraOptions: string[]) {
         //--env-file ./../global.env --env-file .env
         let options = [ "compose", command, ...extraOptions ];
         if (fs.existsSync(path.join(this.server.stacksDir, "global.env"))) {
@@ -664,7 +664,7 @@ export class Stack {
                     ports: obj.Ports.split(/,\s*/).filter((s) => {
                         return s.indexOf("->") >= 0;
                     }),
-                    name: obj.Name
+                    name: obj.Name,
                 });
             };
 
