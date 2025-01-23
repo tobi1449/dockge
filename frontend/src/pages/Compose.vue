@@ -17,7 +17,7 @@
                         {{ $t("deployStack") }}
                     </button>
 
-                    <button v-if="isEditMode" class="btn btn-normal" :disabled="processing" @click="saveStack">
+                    <button v-if="isEditMode && !(isAdd && stack.isGitRepo)" class="btn btn-normal" :disabled="processing" @click="saveStack">
                         <font-awesome-icon icon="save" class="me-1"/>
                         {{ $t("saveStackDraft") }}
                     </button>
@@ -27,16 +27,12 @@
                         {{ $t("editStack") }}
                     </button>
 
-                    <button v-if="!isEditMode && !active" class="btn btn-primary" :disabled="processing"
-                            @click="startStack"
-                    >
+                    <button v-if="!isEditMode && !active" class="btn btn-primary" :disabled="processing" @click="startStack">
                         <font-awesome-icon icon="play" class="me-1"/>
                         {{ $t("startStack") }}
                     </button>
 
-                    <button v-if="!isEditMode && active" class="btn btn-normal " :disabled="processing"
-                            @click="restartStack"
-                    >
+                    <button v-if="!isEditMode && active" class="btn btn-normal " :disabled="processing" @click="restartStack">
                         <font-awesome-icon icon="rotate" class="me-1"/>
                         {{ $t("restartStack") }}
                     </button>
@@ -46,17 +42,12 @@
                         {{ $t("updateStack") }}
                     </button>
 
-                    <button
-                        v-if="!isEditMode && stack.isGitRepo" class="btn btn-normal" :disabled="processing"
-                        @click="gitSync"
-                    >
+                    <button v-if="!isEditMode && stack.isGitRepo" class="btn btn-normal" :disabled="processing" @click="gitSync">
                         <font-awesome-icon icon="rotate" class="me-1"/>
                         {{ $t("gitSync") }}
                     </button>
 
-                    <button v-if="!isEditMode && active" class="btn btn-normal" :disabled="processing"
-                            @click="stopStack"
-                    >
+                    <button v-if="!isEditMode && active" class="btn btn-normal" :disabled="processing" @click="stopStack" >
                         <font-awesome-icon icon="stop" class="me-1"/>
                         {{ $t("stopStack") }}
                     </button>
@@ -72,9 +63,7 @@
                 <button v-if="isEditMode && !isAdd" class="btn btn-normal" :disabled="processing" @click="discardStack">
                     {{ $t("discardStack") }}
                 </button>
-                <button v-if="!isEditMode" class="btn btn-danger" :disabled="processing"
-                        @click="showDeleteDialog = !showDeleteDialog"
-                >
+                <button v-if="!isEditMode" class="btn btn-danger" :disabled="processing" @click="showDeleteDialog = !showDeleteDialog">
                     <font-awesome-icon icon="trash" class="me-1"/>
                     {{ $t("deleteStack") }}
                 </button>
