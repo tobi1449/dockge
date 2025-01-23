@@ -67,7 +67,7 @@ Requirements:
 ### Basic
 
 - Default Stacks Directory: `/opt/stacks`
-- Default Port: 5001
+- Default Port: `5001`
 
 ```
 # Create directories that store your stacks and stores Dockge's stack
@@ -92,18 +92,19 @@ If you want to store your stacks in another directory, you can generate your com
 
 ### Download your compose.yaml
 (in the link, change 5001 to your custom port and the /opt/stacks portion to your custom stack location)
-curl "https://dockge.kuma.pet/compose.yaml?port=5001&stacksPath=/opt/stacks" --output compose.yaml
-```
+
+`curl "https://dockge.kuma.pet/compose.yaml?port=5001&stacksPath=/opt/stacks" --output compose.yaml`
 
 - port=`5001`
 - stacksPath=`/opt/stacks`
 
 Interactive compose.yaml generator is available on: 
-https://dockge.kuma.pet
+`https://dockge.kuma.pet`
 
 ## How to Update
 
-```bash
+```
+bash
 cd /opt/dockge
 docker compose pull && docker compose up -d
 ```
