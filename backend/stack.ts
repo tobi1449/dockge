@@ -83,18 +83,26 @@ export class Stack {
     }
 
     toSimpleJSON(endpoint: string): object {
-        return {
+        let isGitRepo = this.isGitRepo;
+        let obj = {
             name: this.name,
             status: this._status,
             tags: [],
             isManagedByDockge: this.isManagedByDockge,
-            isGitRepo: this.isGitRepo,
-            gitUrl: this.gitUrl,
-            branch: this.branch,
-            webhook: this.webhook,
+            isGitRepo: isGitRepo,
             composeFileName: this._composeFileName,
             endpoint,
         };
+        if (isGitRepo) {
+            return {
+                ...obj,
+                gitUrl: this.gitUrl,
+                branch: this.branch,
+                webhook: this.webhook,
+            };
+        } else {
+            return obj;
+        }
     }
 
     /**
@@ -645,7 +653,7 @@ export class Stack {
 
         try {
 
-            if(!(await fsAsync.stat(this.path)).isDirectory()) {
+            if (!(await fsAsync.stat(this.path)).isDirectory()) {
                 return statusList;
             }
 

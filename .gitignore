@@ -7,6 +7,9 @@ stacks
 tmp
 /private
 .pnpm-store
+.fleet
+.vscode
+.devcontainer/devcontainer.env
 
 # Git only
 frontend-dist
