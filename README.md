@@ -29,6 +29,7 @@ View Video: https://youtu.be/AWAlOQeNpgU?t=48
 ![](https://github.com/louislam/dockge/assets/1336778/89fc1023-b069-42c0-a01c-918c495f1a6a)
 
 ## ⭐ Pull Requests Merged:
+- PR # 83: Allow specifying which user the stack files should belong to (by: https://github.com/RichyHBM)
 - PR #414: Set/Update Friendly Name (by https://github.com/lohrbini)
 - PR #438: Docker Compose Pull Skip Local Images (by https://github.com/vladaurosh)
 - PR #575: Theme Options Enabled in Settings (by https://github.com/CampaniaGuy)
@@ -41,6 +42,7 @@ View Video: https://youtu.be/AWAlOQeNpgU?t=48
 - PR #649: Add Container Control Buttons (by https://github.com/mizady)
 - PR #685: Preserve YAML Comments (by https://github.com/turnah)
 - PR #700: Add Resource Usage Stats (by https://github.com/justwiebe)
+- PR #714: Conditional stack files deletion (by: https://github.com/husa)
 
 
 ## 🔧 How to Install
@@ -63,7 +65,7 @@ Requirements:
 ### Basic
 
 - Default Stacks Directory: `/opt/stacks`
-- Default Port: 5001
+- Default Port: `5001`
 
 ```
 # Create directories that store your stacks and stores Dockge's stack
@@ -84,22 +86,23 @@ Dockge is now running on http://localhost:5001
 
 ### Advanced
 
-If you want to store your stacks in another directory, you can generate your compose.yaml file by using the following URL with custom query strings.
+If you want to store your stacks in another directory, you can generate your compose.yaml file by using the following URL with custom query strings and change the image from `louislam/dockge:1` to `cmcooper1980/dockge` after downloading if you want to use this fork; or see and update the example docker-compose.yml file at the bottom of this page.
 
-```
-# Download your compose.yaml
-curl "https://dockge.kuma.pet/compose.yaml?port=5001&stacksPath=/opt/stacks" --output compose.yaml
-```
+### Download your compose.yaml
+(in the link, change 5001 to your custom port and the /opt/stacks portion to your custom stack location)
+
+`curl "https://dockge.kuma.pet/compose.yaml?port=5001&stacksPath=/opt/stacks" --output compose.yaml`
 
 - port=`5001`
 - stacksPath=`/opt/stacks`
 
 Interactive compose.yaml generator is available on: 
-https://dockge.kuma.pet
+`https://dockge.kuma.pet`
 
 ## How to Update
 
-```bash
+```
+bash
 cd /opt/dockge
 docker compose pull && docker compose up -d
 ```
@@ -124,7 +127,7 @@ docker compose pull && docker compose up -d
 Dockge is built on top of [Compose V2](https://docs.docker.com/compose/migrate/). `compose.yaml`  also known as `docker-compose.yml`.
 
 `compose.yaml` file above is great if cloning and building locally, otherwise, you can use this `docker-compose.yml` file to run docker command:
-`docker compose up -d` just edit the approprite fields `[USER]`, `[CONFIG_LOCATION_FOR_DOCKGE]`, and `[PATH_TO_STACKS_DIRECTORY]`:
+`docker compose up -d` just edit the approprite field, `[CONFIG_LOCATION_FOR_DOCKGE]` (difference from compose.yaml is it does not have the build parameter):
 ```
 services:
   dockge:
@@ -133,7 +136,10 @@ services:
     restart: unless-stopped
     environment:
       # Tell Dockge where is your stacks directory
-      DOCKGE_STACKS_DIR: /opt/stacks
+      DOCKGE_STACKS_DIR: /opt/stacks #must be the same as the source and target bind mounted volume
+      # Both PUID and PGID must be set for it to do anything
+      - PUID=1000 # Set the stack file/dir ownership to this user
+      - PGID=1000 # Set the stack file/dir ownership to this group
     ports:
       # Host Port : Container Port
       - 5001:5001
@@ -144,7 +150,7 @@ services:
         bind:
           create_host_path: true
       - type: bind
-        source: /home/[USER]/[CONFIG_LOCATION_FOR_DOCKGE]
+        source: [CONFIG_LOCATION_FOR_DOCKGE] # or wherever you keep your app data
         target: /app/data
         bind:
           create_host_path: true
@@ -154,9 +160,12 @@ services:
       # Stacks Directory
       # ⚠️ READ IT CAREFULLY. If you did it wrong, your data could end up writing into a WRONG PATH.
       # ⚠️ 1. FULL path only. No relative path (MUST)
-      # ⚠️ 2. Left Stacks Path === Right Stacks Path (MUST)
+      # ⚠️ 2. source: and target: can be your preference but have to match, the environment variable
+      #       DOCKGE_STACKS_DIR also has to match and is what tells dockge where your stacks
+      #       directory is in the container
       - type: bind
-        source: /home/[USER]/[PATH_TO_STACKS_DIRECTORY]
+        source: /opt/stacks
         target: /opt/stacks
         bind:
           create_host_path: true
+

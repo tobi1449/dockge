@@ -321,6 +321,10 @@
             <!-- Delete Dialog -->
             <BModal v-model="showDeleteDialog" :okTitle="$t('deleteStack')" okVariant="danger" @ok="deleteDialog">
                 {{ $t("deleteStackMsg") }}
+                <div class="form-check mt-4">
+                    <label><input v-model="deleteStackFiles" class="form-check-input" type="checkbox" />{{
+                        $t("deleteStackFilesConfirmation") }}</label>
+                </div>
             </BModal>
         </div>
     </transition>
@@ -399,6 +403,7 @@ export default {
             isEditMode: false,
             submitted: false,
             showDeleteDialog: false,
+            deleteStackFiles: false,
             newContainerName: "",
             stopServiceStatusTimeout: false,
             stopDockerStatsTimeout: false,
@@ -783,7 +788,7 @@ export default {
         },
 
         deleteDialog() {
-            this.$root.emitAgent(this.endpoint, "deleteStack", this.stack.name, (res) => {
+            this.$root.emitAgent(this.endpoint, "deleteStack", this.stack.name, { deleteStackFiles: this.deleteStackFiles }, (res) => {
                 this.$root.toastRes(res);
                 if (res.ok) {
                     this.$router.push("/");

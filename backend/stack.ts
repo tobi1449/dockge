@@ -24,6 +24,10 @@ import { Settings } from "./settings";
 import { execSync } from "child_process";
 import ini from "ini";
 
+export interface DeleteOptions {
+    deleteStackFiles: boolean
+}
+
 export class Stack {
 
     name: string;
@@ -253,14 +257,12 @@ export class Stack {
         }
 
         // Write or overwrite the compose.yaml
-        await fsAsync.writeFile(path.join(dir, this._composeFileName), this.composeYAML);
-
-        const envPath = path.join(dir, ".env");
-
-        // Write or overwrite the .env
-        // If .env is not existing and the composeENV is empty, we don't need to write it
-        if (await fileExists(envPath) || this.composeENV.trim() !== "") {
-            await fsAsync.writeFile(envPath, this.composeENV);
+        fs.writeFileSync(path.join(dir, this._composeFileName), this.composeYAML);
+        if (process.env.PUID && process.env.PGID) {
+            const uid = Number(process.env.PUID);
+            const gid = Number(process.env.PGID);
+            fs.lchownSync(dir, uid, gid);
+            fs.chownSync(path.join(dir, this._composeFileName), uid, gid);
         }
     }
 
@@ -273,18 +275,20 @@ export class Stack {
         return exitCode;
     }
 
-    async delete(socket: DockgeSocket): Promise<number> {
+    async delete(socket: DockgeSocket, options: DeleteOptions) : Promise<number> {
         const terminalName = getComposeTerminalName(socket.endpoint, this.name);
         let exitCode = await Terminal.exec(this.server, socket, terminalName, "docker", this.getComposeOptions("down", "--remove-orphans"), this.path);
         if (exitCode !== 0) {
             throw new Error("Failed to delete, please check the terminal output for more information.");
         }
 
-        // Remove the stack folder
-        await fsAsync.rm(this.path, {
-            recursive: true,
-            force: true,
-        });
+        if (options.deleteStackFiles) {
+            // Remove the stack folder
+            await fsAsync.rm(this.path, {
+                recursive: true,
+                force: true
+            });
+        }
 
         return exitCode;
     }
