@@ -3,7 +3,7 @@
     "version": "1.4.3-unofficial",
     "type": "module",
     "engines": {
-        "node": ">= 18.0.0 && <= 18.17.1"
+        "node": ">= 18.0.0 && <= 18.20.6"
     },
     "scripts": {
         "fmt": "eslint \"**/*.{ts,vue}\" --fix",
