@@ -45,6 +45,7 @@ View Video: https://youtu.be/AWAlOQeNpgU?t=48
 - PR #685: Preserve YAML Comments (by https://github.com/turnah)
 - PR #700: Add Resource Usage Stats (by https://github.com/justwiebe)
 - PR #714: Conditional stack files deletion (by: https://github.com/husa)
+- PR #687: Support for nested stacks directory (by: https://github.com/mkoo21)
 
 
 ## 🔧 How to Install
