@@ -42,6 +42,7 @@ View Video: https://youtu.be/AWAlOQeNpgU?t=48
 - PR #637: Implement RIGHT and LEFT KEYS terminal navigation (by https://github.com/lukasondrejka)
 - PR #642: Remove Useless Scrollbar (by https://github.com/cyril59310)
 - PR #649: Add Container Control Buttons (by https://github.com/mizady)
+- PR #670: GitOps with multiple stacks (by: https://github.com/Felioh)
 - PR #685: Preserve YAML Comments (by https://github.com/turnah)
 - PR #700: Add Resource Usage Stats (by https://github.com/justwiebe)
 - PR #714: Conditional stack files deletion (by: https://github.com/husa)
