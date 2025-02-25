@@ -648,6 +648,10 @@ export class Stack {
         let statusList = new Map<string, Array<object>>();
 
         try {
+            if (!(await fsAsync.stat(this.path)).isDirectory()) {
+                return statusList;
+            }
+
             let res = await childProcessAsync.spawn("docker", this.getComposeOptions("ps", "--format", "json"), {
                 cwd: this.path,
                 encoding: "utf-8",
