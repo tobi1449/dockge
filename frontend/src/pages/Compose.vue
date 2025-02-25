@@ -558,9 +558,9 @@ export default {
         } else {
             this.stack.name = this.$route.params.stackName;
             this.loadStack();
+            this.requestServiceStatus();
         }
 
-        this.requestServiceStatus();
         this.requestDockerStats();
     },
     unmounted() {
