@@ -206,14 +206,6 @@ export class Stack {
             fs.lchownSync(dir, uid, gid);
             fs.chownSync(path.join(dir, this._composeFileName), uid, gid);
         }
-
-        const envPath = path.join(dir, ".env");
-
-        // Write or overwrite the .env
-        // If .env is not existing and the composeENV is empty, we don't need to write it
-        if (await fileExists(envPath) || this.composeENV.trim() !== "") {
-            await fsAsync.writeFile(envPath, this.composeENV);
-        }
     }
 
     async deploy(socket : DockgeSocket) : Promise<number> {
