@@ -203,6 +203,10 @@
                                 :first="name === Object.keys(jsonConfig.services)[0]"
                                 :serviceStatus="serviceStatusList[name]"
                                 :dockerStats="dockerStats"
+                                :processing="processing"                         
+                                @start-service="startService"
+                                @stop-service="stopService"
+                                @restart-service="restartService"
                             />
                         </div>
                     </div>
