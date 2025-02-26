@@ -32,6 +32,7 @@ View Video: https://youtu.be/AWAlOQeNpgU?t=48
 
 ## ⭐ Pull Requests Merged:
 - PR # 83: Allow specifying which user the stack files should belong to (by: https://github.com/RichyHBM)
+- PR #387: Global.env editor and usage in docker operations (by: https://github.com/syko9000)
 - PR #414: Set/Update Friendly Name (by https://github.com/lohrbini)
 - PR #438: Docker Compose Pull Skip Local Images (by https://github.com/vladaurosh)
 - PR #575: Theme Options Enabled in Settings (by https://github.com/CampaniaGuy)

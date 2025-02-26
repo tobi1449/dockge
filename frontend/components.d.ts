@@ -23,6 +23,7 @@ declare module 'vue' {
     DockerStat: typeof import('./src/components/DockerStat.vue')['default']
     General: typeof import('./src/components/settings/General.vue')['default']
     GitOps: typeof import('./src/components/settings/GitOps.vue')['default']
+    GlobalEnv: typeof import('./src/components/settings/GlobalEnv.vue')['default']
     HiddenInput: typeof import('./src/components/HiddenInput.vue')['default']
     Login: typeof import('./src/components/Login.vue')['default']
     NetworkInput: typeof import('./src/components/NetworkInput.vue')['default']
