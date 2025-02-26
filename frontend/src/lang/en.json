@@ -136,5 +136,15 @@
     "memory": "Memory",
     "memoryAbbreviated": "Mem",
     "networkIO": "Network I/O",
-    "blockIO": "Block I/O"
+    "blockIO": "Block I/O",
+    "repositoryUrl": "Repository URL",
+    "branch": "Branch",
+    "gitAutoUpdate": "[GitOps] Auto Update",
+    "enableAutoUpdate": "Check periodically for updates",
+    "ManageWithGit": "Manage this stack with Git",
+    "webhook": "Webhook URL to trigger update",
+    "copy": "Copy",
+    "GitOps": "GitOps",
+    "GitConfig": "Git Configuration",
+    "gitSync": "Sync Repo"
 }
