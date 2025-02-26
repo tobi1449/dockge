@@ -147,5 +147,5 @@
     "GitOps": "GitOps",
     "GitConfig": "Git Configuration",
     "gitSync": "Sync Repo",
-    "GlobalEnv": "Global .env",
+    "GlobalEnv": "Global .env"
 }
