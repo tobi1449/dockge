@@ -213,12 +213,15 @@ export default defineComponent({
             type: Object,
             default: null,
         },
-        ports: {
-            type: Array,
-            default: null
+        processing: {
+            type: Boolean,
+            default: false,
         }
     },
     emits: [
+        "start-service",
+        "stop-service",
+        "restart-service"
     ],
     data() {
         return {
