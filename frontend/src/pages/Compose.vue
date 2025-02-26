@@ -201,8 +201,7 @@
                                 :name="name"
                                 :is-edit-mode="isEditMode"
                                 :first="name === Object.keys(jsonConfig.services)[0]"
-                                :serviceStatus="serviceStatusList[name]?.state"
-                                :ports="serviceStatusList[name]?.ports"
+                                :serviceStatus="serviceStatusList[name]"
                                 :dockerStats="dockerStats"
                             />
                         </div>
