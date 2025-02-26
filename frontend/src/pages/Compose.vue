@@ -202,7 +202,7 @@
                                 :is-edit-mode="isEditMode"
                                 :first="name === Object.keys(jsonConfig.services)[0]"
                                 :serviceStatus="serviceStatusList[name]"
-                                :dockerStats="dockerStats"
+                                :dockerStats="dockerStats"                                
                                 :processing="processing"                         
                                 @start-service="startService"
                                 @stop-service="stopService"
@@ -954,6 +954,7 @@ export default {
                 }
             });
         },
+
         async copyWebhookToClipboard() {
             try {
                 await navigator.clipboard.writeText(this.stack.webhook);
@@ -966,7 +967,6 @@ export default {
         selectText(event) {
             event.target.select();
         },
-
     }
 };
 </script>
