@@ -16,7 +16,7 @@
                         {{ $t("deployStack") }}
                     </button>
 
-                    <button v-if="isEditMode && !stack.isGitRepo" class="btn btn-normal" :disabled="processing" @click="saveStack">
+                    <button v-if="isEditMode && !(isAdd && stack.isGitRepo)" class="btn btn-normal" :disabled="processing" @click="saveStack">
                         <font-awesome-icon icon="save" class="me-1" />
                         {{ $t("saveStackDraft") }}
                     </button>
@@ -558,9 +558,9 @@ export default {
         } else {
             this.stack.name = this.$route.params.stackName;
             this.loadStack();
+            this.requestServiceStatus();
         }
 
-        this.requestServiceStatus();
         this.requestDockerStats();
     },
     unmounted() {
